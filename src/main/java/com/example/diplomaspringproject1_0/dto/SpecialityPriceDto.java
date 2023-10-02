@@ -1,18 +1,16 @@
 package com.example.diplomaspringproject1_0.dto;
 
+import com.example.diplomaspringproject1_0.entity.enums.Speciality;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Data
-public class CourseDto {
+public class SpecialityPriceDto {
 
     private Long id;
 
-    private String name;
-
-    private List<Integer> years;
+    private Speciality speciality;
 
     private BigDecimal price;
 }

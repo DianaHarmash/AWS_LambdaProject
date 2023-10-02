@@ -1,0 +1,10 @@
+We have three entities: Deanery, Student and SpecialityPrice.
+Also there is DeaneryAdmin which can manage Deanery.
+
+Deanery can log in and after that it can manage specialities and its price.
+Also it can withdraw money from balance so to pay for teachers' work, renting and so on.
+Deanery can pay back money to the student if it transferred too much.
+
+Student can pay for its studying.
+
+

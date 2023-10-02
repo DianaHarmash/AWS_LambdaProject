@@ -1,31 +1,30 @@
 package com.example.diplomaspringproject1_0.entity;
 
+import com.example.diplomaspringproject1_0.entity.enums.Rights;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Builder
 @ToString
-public class Course {
+@Builder
+public class SystemUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false,
+            unique = true)
+    private String surname;
+
     @Column(nullable = false)
     private String name;
 
-    @ElementCollection
     @Column(nullable = false)
-    private List<Integer> years;
-
-    @Column(nullable = false)
-    private BigDecimal price;
+    @Enumerated(EnumType.STRING)
+    private Rights rights;
 }
