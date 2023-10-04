@@ -1,6 +1,5 @@
 package com.example.diplomaspringproject1_0.entity;
 
-import com.example.diplomaspringproject1_0.entity.enums.Rights;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +12,7 @@ import java.math.BigDecimal;
 @Setter
 @ToString
 @Builder
-public class Student {
+public class StudentCabinet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,22 +21,16 @@ public class Student {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private SystemUser user;
 
-    @Column(nullable = false)
+    @Column
     private Integer year;
 
-    @Column(name = "group_name",
-            nullable = false)
+    @Column(name = "group_name")
     private String groupName;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "speciality_price_id", referencedColumnName = "id")
-    private SpecialityPrice speciality;
+    private Speciality speciality;
 
-    @Column(name = "debt_balance",
-            nullable = false)
+    @Column(name = "debt_balance")
     private BigDecimal debtBalance;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Rights rights;
 }

@@ -1,6 +1,6 @@
 package com.example.diplomaspringproject1_0.mappers;
 
-import com.example.diplomaspringproject1_0.dto.SystemUsersDto;
+import com.example.diplomaspringproject1_0.dto.SystemUserDto;
 import com.example.diplomaspringproject1_0.entity.SystemUser;
 import com.example.diplomaspringproject1_0.entity.enums.Rights;
 import org.mapstruct.Named;
@@ -16,10 +16,10 @@ public interface SystemUserMapping {
 
 
     @Mapping(target = "source.rights", qualifiedByName = "transformStringRightsToEnum")
-    SystemUsersDto systemUserToSystemUserDto(SystemUser source);
+    SystemUserDto systemUserToSystemUserDto(SystemUser source);
 
     @Mapping(target = "source.rights", qualifiedByName = "transformEnumToStringRights")
-    SystemUser systemUserDtoToSystemUser(SystemUsersDto source);
+    SystemUser systemUserDtoToSystemUser(SystemUserDto source);
 
 //    default SystemUsersDto systemUserToSystemUserDto(SystemUser source) {
 //        SystemUsersDto systemUsersDto = SystemUsersDto.builder()
@@ -46,7 +46,7 @@ public interface SystemUserMapping {
 
     @Named("transformStringRightsToEnum")
     static Rights transformStringRightsToEnum(String rights) {
-        switch (rights = rights.toUpperCase(Locale.ROOT)) {
+        switch (rights.toUpperCase(Locale.ROOT)) {
             case "STUDENT": return Rights.STUDENT;
             case "ADMIN": return Rights.ADMIN;
             case "FORBIDDEN": return Rights.FORBIDDEN;

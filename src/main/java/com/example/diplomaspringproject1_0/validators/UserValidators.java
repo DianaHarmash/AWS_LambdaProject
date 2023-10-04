@@ -1,6 +1,6 @@
 package com.example.diplomaspringproject1_0.validators;
 
-import com.example.diplomaspringproject1_0.dto.SystemUsersDto;
+import com.example.diplomaspringproject1_0.dto.SystemUserDto;
 import com.example.diplomaspringproject1_0.entity.enums.Rights;
 import com.example.diplomaspringproject1_0.exceptions.ApiError;
 import com.example.diplomaspringproject1_0.exceptions.UserException;
@@ -11,16 +11,16 @@ import org.springframework.stereotype.Component;
 import java.util.regex.Pattern;
 
 @Component
-public class UserValidators implements Validator<SystemUsersDto> {
+public class UserValidators implements Validator<SystemUserDto> {
 
     Pattern engPattern = Pattern.compile("^[A-Z]{1}[a-z]{2,}$");
     Pattern ukrainianPattern = Pattern.compile("^[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ]{1}[абвгґдеєжзиіїйклмнопрстуфхцчшщьюя]{2,}$");
 
     @Override
-    public void validate(SystemUsersDto systemUsersDto) throws UserException {
-        String surname = systemUsersDto.getSurname();
-        String name = systemUsersDto.getName();
-        String rights = systemUsersDto.getRights();
+    public void validate(SystemUserDto systemUserDto) throws UserException {
+        String surname = systemUserDto.getSurname();
+        String name = systemUserDto.getName();
+        String rights = systemUserDto.getRights();
 
         if (!engPattern.matcher(surname).matches() &&
             !ukrainianPattern.matcher(surname).matches()) {

@@ -3,9 +3,11 @@ package com.example.diplomaspringproject1_0.dto;
 import lombok.Data;
 
 @Data
-public class StudentDto {
+public class StudentCabinetDto {
 
     private Long id;
+
+    private SystemUserDto systemUserDto;
 
     private Integer year;
 

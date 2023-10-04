@@ -1,6 +1,6 @@
 package com.example.diplomaspringproject1_0.entity.enums;
 
-public enum Speciality {
+public enum SpecialityName {
     MANAGEMENT("Менеджмент"),
     COMPUTER_SCIENCE("Комп\'ютерні науки"),
     ECOLOGY("Екологія"),
@@ -11,7 +11,7 @@ public enum Speciality {
 
     private final String specialityName;
 
-    Speciality(String specialityName) {
+    SpecialityName(String specialityName) {
         this.specialityName = specialityName;
     }
 

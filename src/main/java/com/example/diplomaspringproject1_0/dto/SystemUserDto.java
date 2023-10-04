@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @ToString
 @Builder
-public class SystemUsersDto {
+public class SystemUserDto {
 
     private Long id;
 
