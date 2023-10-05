@@ -2,11 +2,13 @@ package com.example.diplomaspringproject1_0.service;
 
 import com.example.diplomaspringproject1_0.dto.SpecialityDto;
 import com.example.diplomaspringproject1_0.dto.StudentCabinetDto;
+import com.example.diplomaspringproject1_0.dto.SystemUserDto;
 import com.example.diplomaspringproject1_0.entity.Speciality;
 import com.example.diplomaspringproject1_0.entity.StudentCabinet;
 import com.example.diplomaspringproject1_0.entity.SystemUser;
 import com.example.diplomaspringproject1_0.mappers.SpecialityMapping;
 import com.example.diplomaspringproject1_0.mappers.StudentCabinetMapping;
+import com.example.diplomaspringproject1_0.mappers.SystemUserMapping;
 import com.example.diplomaspringproject1_0.repositories.StudentCabinetRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -22,15 +24,18 @@ public class StudentCabinetService {
 
     private final StudentCabinetRepository studentCabinetRepository;
     private final SpecialityService specialityService;
+    private final SystemUserMapping systemUserMapping;
     private final SpecialityMapping specialityMapping;
     private final StudentCabinetMapping studentCabinetMapping;
     @Autowired
     public StudentCabinetService(StudentCabinetRepository studentCabinetRepository,
                                  SpecialityService specialityService,
+                                 SystemUserMapping systemUserMapping,
                                  SpecialityMapping specialityMapping,
                                  StudentCabinetMapping studentCabinetMapping) {
         this.studentCabinetRepository = studentCabinetRepository;
         this.specialityService = specialityService;
+        this.systemUserMapping = systemUserMapping;
         this.specialityMapping = specialityMapping;
         this.studentCabinetMapping = studentCabinetMapping;
     }
@@ -51,7 +56,9 @@ public class StudentCabinetService {
 
         log.debug("Filled student cabinet with id = {}", studentCabinetFromDb.getId());
 
-        StudentCabinetDto updatedStudentCabinet = studentCabinetMapping.studentCabinetToStudentCabinetDto(studentCabinetFromDb);
+        SystemUserDto systemUserDto = systemUserMapping.systemUserToSystemUserDto(studentCabinetFromDb.getUser());
+
+        StudentCabinetDto updatedStudentCabinet = studentCabinetMapping.studentCabinetToStudentCabinetDto(studentCabinetFromDb, systemUserDto);
         return updatedStudentCabinet;
     }
 
@@ -61,7 +68,9 @@ public class StudentCabinetService {
         StudentCabinet preBuildStudentCabinet = preBuildStudentCabinet(systemUser);
         StudentCabinet studentCabinet = studentCabinetRepository.save(preBuildStudentCabinet);
 
-        StudentCabinetDto studentCabinetDto = studentCabinetMapping.studentCabinetToStudentCabinetDto(studentCabinet);
+        SystemUserDto systemUserDto = systemUserMapping.systemUserToSystemUserDto(systemUser);
+
+        StudentCabinetDto studentCabinetDto = studentCabinetMapping.studentCabinetToStudentCabinetDto(studentCabinet, systemUserDto);
         return studentCabinetDto;
     }
 

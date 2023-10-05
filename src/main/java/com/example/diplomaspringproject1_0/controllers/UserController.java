@@ -21,7 +21,7 @@ public class UserController {
         return new ResponseEntity<>(userService.createUser(systemUsersDto), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}}")
+    @GetMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<SystemUserDto> getUserById(@PathVariable Long id) {
         // TODO: add retrieving information about user
