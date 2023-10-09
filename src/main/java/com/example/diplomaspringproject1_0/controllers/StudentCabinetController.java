@@ -18,11 +18,28 @@ public class StudentCabinetController {
     }
 
     @PutMapping()
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<StudentCabinetDto> createStudentCabinetForUser(@RequestParam Long adminId,
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<StudentCabinetDto> updateStudentCabinetForUser(@RequestParam Long adminId,
                                                                          @RequestBody StudentCabinetDto systemUserDto) {
-        return new ResponseEntity<>(studentCabinetService.createStudentCabinet(adminId, systemUserDto),
+        return new ResponseEntity<>(studentCabinetService.updateStudentCabinet(adminId, systemUserDto),
                                     HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("{/id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void deleteStudentCabinet() {
+
+        // TODO: delete student cabinet
+
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<String> transitPayToTheBalance() {
+
+        // TODO: add transaction between a student and the university
+
+        return null;
     }
 
 }

@@ -1,7 +1,6 @@
 package com.example.diplomaspringproject1_0.controllers;
 
 import com.example.diplomaspringproject1_0.dto.SpecialityDto;
-import com.example.diplomaspringproject1_0.dto.StudentCabinetDto;
 import com.example.diplomaspringproject1_0.service.SpecialityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,10 +24,20 @@ public class SpecialityController {
         return new ResponseEntity<>(specialityService.createSpeciality(adminId, specialityDto),
                                     HttpStatus.CREATED);
     }
-    @GetMapping("/{specialityString}")
+    @GetMapping("/{speciality}")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<SpecialityDto> getSpecialityBuSpecialityName(@PathVariable String specialityString) {
-        return new ResponseEntity<>(specialityService.getSpecialityBuSpecialityName(specialityString),
+    public ResponseEntity<SpecialityDto> getSpecialityBuSpecialityName(@PathVariable String speciality) {
+        return new ResponseEntity<>(specialityService.getSpecialityBuSpecialityName(speciality),
                                     HttpStatus.OK);
+    }
+    @PutMapping("/{speciality}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<SpecialityDto> updateSpeciality(@PathVariable String speciality,
+                                                          @RequestParam Long adminId,
+                                                          @RequestBody SpecialityDto specialityDto) {
+
+        // TODO: add updating of the speciality
+
+        return null;
     }
 }

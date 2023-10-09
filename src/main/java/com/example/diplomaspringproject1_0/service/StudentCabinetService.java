@@ -41,7 +41,7 @@ public class StudentCabinetService {
     }
 
     @Transactional
-    public StudentCabinetDto createStudentCabinet(Long adminId, StudentCabinetDto studentCabinetDto) {
+    public StudentCabinetDto updateStudentCabinet(Long adminId, StudentCabinetDto studentCabinetDto) {
         // TODO: check rights of admin
         log.debug("Starting filling student cabinet for student id = {}", studentCabinetDto.getSystemUserDto().getId());
 
@@ -50,14 +50,12 @@ public class StudentCabinetService {
 
         SpecialityDto specialityDto = specialityService.getSpecialityBuSpecialityName(studentCabinetDto.getSpeciality());
         Speciality speciality = specialityMapping.specialityDtoToSpeciality(specialityDto);
-
         studentCabinetFromDb = buildStudentCabinet(studentCabinetFromDb, studentCabinetDto, speciality);
         studentCabinetRepository.save(studentCabinetFromDb);
 
         log.debug("Filled student cabinet with id = {}", studentCabinetFromDb.getId());
 
         SystemUserDto systemUserDto = systemUserMapping.systemUserToSystemUserDto(studentCabinetFromDb.getUser());
-
         StudentCabinetDto updatedStudentCabinet = studentCabinetMapping.studentCabinetToStudentCabinetDto(studentCabinetFromDb, systemUserDto);
         return updatedStudentCabinet;
     }
@@ -67,10 +65,9 @@ public class StudentCabinetService {
 
         StudentCabinet preBuildStudentCabinet = preBuildStudentCabinet(systemUser);
         StudentCabinet studentCabinet = studentCabinetRepository.save(preBuildStudentCabinet);
-
         SystemUserDto systemUserDto = systemUserMapping.systemUserToSystemUserDto(systemUser);
-
         StudentCabinetDto studentCabinetDto = studentCabinetMapping.studentCabinetToStudentCabinetDto(studentCabinet, systemUserDto);
+
         return studentCabinetDto;
     }
 

@@ -42,10 +42,10 @@ public class SpecialityService {
         return savedSpeciality;
     }
 
-    public SpecialityDto getSpecialityBuSpecialityName(String specialityString) {
-        log.debug("Getting speciality for name = {}", specialityString);
+    public SpecialityDto getSpecialityBuSpecialityName(String requestedSpeciality) {
+        log.debug("Getting speciality for name = {}", requestedSpeciality);
 
-        SpecialityName specialityName = transformSpecialityNameToEnum(specialityString);
+        SpecialityName specialityName = transformSpecialityNameToEnum(requestedSpeciality);
 
         Speciality speciality = specialtyRepository.findBySpeciality(specialityName)
                                                    .orElseThrow();
