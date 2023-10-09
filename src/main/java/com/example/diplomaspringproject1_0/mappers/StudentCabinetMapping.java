@@ -20,7 +20,9 @@ public interface StudentCabinetMapping {
                                                                .id(studentCabinet.getId())
                                                                .year(studentCabinet.getYear())
                                                                .systemUserDto(systemUserDto)
-                                                               .speciality(transformEnumToSpecialityName(studentCabinet.getSpeciality().getSpeciality()))
+                                                               .speciality(studentCabinet.getSpeciality() != null ?
+                                                                                          transformEnumToSpecialityName(studentCabinet.getSpeciality().getSpeciality()) :
+                                                                                          null)
                                                                .group(studentCabinet.getGroupName())
                                                                .build();
 
@@ -37,7 +39,7 @@ public interface StudentCabinetMapping {
     static StudentCabinet buildStudentCabinet(StudentCabinet studentCabinetFromDb, StudentCabinetDto studentCabinetDtoFromUser, Speciality speciality) {
         studentCabinetFromDb.setYear(studentCabinetDtoFromUser.getYear());
         studentCabinetFromDb.setSpeciality(speciality);
-        studentCabinetFromDb.setGroupName(studentCabinetFromDb.getGroupName());
+        studentCabinetFromDb.setGroupName(studentCabinetDtoFromUser.getGroup());
         studentCabinetFromDb.setDebtBalance(speciality.getPrice());
         return studentCabinetFromDb;
     }

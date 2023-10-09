@@ -45,7 +45,7 @@ public class StudentCabinetService {
         // TODO: check rights of admin
         log.debug("Starting filling student cabinet for student id = {}", studentCabinetDto.getUserId());
 
-        StudentCabinet studentCabinetFromDb = studentCabinetRepository.findById(studentCabinetDto.getId())
+        StudentCabinet studentCabinetFromDb = studentCabinetRepository.findByUserId(studentCabinetDto.getUserId())
                                                                       .orElseThrow();
 
         SpecialityDto specialityDto = specialityService.getSpecialityBuSpecialityName(studentCabinetDto.getSpeciality());

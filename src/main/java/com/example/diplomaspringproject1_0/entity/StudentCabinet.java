@@ -27,8 +27,8 @@ public class StudentCabinet {
     @Column(name = "group_name")
     private String groupName;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "speciality_price_id", referencedColumnName = "id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "speciality_id", referencedColumnName = "id")
     private Speciality speciality;
 
     @Column(name = "debt_balance")
