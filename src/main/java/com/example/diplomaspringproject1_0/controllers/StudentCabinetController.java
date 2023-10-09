@@ -20,7 +20,7 @@ public class StudentCabinetController {
     @PutMapping()
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<StudentCabinetDto> createStudentCabinetForUser(@RequestParam Long adminId,
-                                                                        @RequestBody StudentCabinetDto systemUserDto) {
+                                                                         @RequestBody StudentCabinetDto systemUserDto) {
         return new ResponseEntity<>(studentCabinetService.createStudentCabinet(adminId, systemUserDto),
                                     HttpStatus.CREATED);
     }
