@@ -43,9 +43,9 @@ public class StudentCabinetService {
     @Transactional
     public StudentCabinetDto createStudentCabinet(Long adminId, StudentCabinetDto studentCabinetDto) {
         // TODO: check rights of admin
-        log.debug("Starting filling student cabinet for student id = {}", studentCabinetDto.getUserId());
+        log.debug("Starting filling student cabinet for student id = {}", studentCabinetDto.getSystemUserDto().getId());
 
-        StudentCabinet studentCabinetFromDb = studentCabinetRepository.findById(studentCabinetDto.getId())
+        StudentCabinet studentCabinetFromDb = studentCabinetRepository.findByUserId(studentCabinetDto.getSystemUserDto().getId())
                                                                       .orElseThrow();
 
         SpecialityDto specialityDto = specialityService.getSpecialityBuSpecialityName(studentCabinetDto.getSpeciality());

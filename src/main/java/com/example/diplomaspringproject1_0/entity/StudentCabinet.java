@@ -28,7 +28,7 @@ public class StudentCabinet {
     private String groupName;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "speciality_price_id", referencedColumnName = "id")
+    @JoinColumn(name = "speciality_id", referencedColumnName = "id")
     private Speciality speciality;
 
     @Column(name = "debt_balance")

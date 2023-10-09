@@ -43,7 +43,7 @@ public class UserService {
         SystemUser user = systemUserRepository.save(userToSave);
         if (user.getRights().equals(Rights.STUDENT)) {
             StudentCabinetDto studentCabinetDto = studentCabinetService.preCreateStudentCabinetForUser(user);
-            log.debug("Created new student cabinet with id = {} for user id = {}", studentCabinetDto.getId(), studentCabinetDto.getUserId());
+            log.debug("Created new student cabinet with id = {} for user id = {}", studentCabinetDto.getId(), studentCabinetDto.getSystemUserDto().getId());
         }
 
         SystemUserDto systemUserDto = systemUserMapping.systemUserToSystemUserDto(user);

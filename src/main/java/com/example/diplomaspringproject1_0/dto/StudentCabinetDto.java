@@ -11,12 +11,10 @@ public class StudentCabinetDto {
 
     private SystemUserDto systemUserDto;
 
-    private Integer year;
+    private String speciality;
 
     private String group;
 
-    private String speciality;
-
-    private Long userId;
+    private Integer year;
 
 }

@@ -40,8 +40,8 @@ public class UserValidators implements Validator<SystemUserDto> {
                                             .build());
         }
 
-        if (!Rights.ADMIN.name().equalsIgnoreCase(rights) &&
-            !Rights.STUDENT.name().equalsIgnoreCase(rights)) {
+        if (!Rights.ADMIN.name().equals(rights) &&
+            !Rights.STUDENT.name().equals(rights)) {
             throw new UserException(ApiError.builder()
                                             .message("Surname mismatches the format.")
                                             .userMessage("Права не відповідають формату.")

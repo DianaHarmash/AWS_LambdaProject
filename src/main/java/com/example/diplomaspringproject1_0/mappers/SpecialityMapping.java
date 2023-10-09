@@ -12,15 +12,45 @@ import java.util.Locale;
 @Mapper(componentModel = "spring")
 public interface SpecialityMapping {
 
-    @Mapping(target = "source.speciality", qualifiedByName = "transformEnumToSpecialityName")
-    SpecialityDto specialityToSpecialityDto(Speciality source);
 
-    @Mapping(target = "source.speciality", qualifiedByName = "transformSpecialityNameToEnum")
-    Speciality specialityDtoToSpeciality(SpecialityDto source);
+//    @Mapping(target = "source.speciality", expression = "java(source.speciality.getSpecialityName())")
+//    SpecialityDto specialityToSpecialityDto(Speciality source);
+
+    //    @Mapping(target = "source.speciality", qualifiedByName = "transformSpecialityNameToEnum")
+//    Speciality specialityDtoToSpeciality(SpecialityDto source);
+    default Speciality specialityDtoToSpeciality(SpecialityDto source) {
+        SpecialityDto specialityDto = new SpecialityDto(source.getId(),
+                                                        source.getSpeciality(),
+                                                        source.getPrice(),
+                                                        source.getQuantityOfPlaces());
+
+        Speciality speciality = new Speciality();
+        speciality.setId(specialityDto.getId());
+        speciality.setSpeciality(transformSpecialityNameToEnum(specialityDto.getSpeciality()));
+        speciality.setPrice(specialityDto.getPrice());
+        speciality.setQuantityOfPlaces(specialityDto.getQuantityOfPlaces());
+        speciality.setQuantityOfBillablePlaces(specialityDto.getQuantityOfBillablePlaces());
+
+        return speciality;
+    }
+
+    default SpecialityDto specialityToSpecialityDto(Speciality source) {
+        SpecialityDto specialityDto = SpecialityDto.builder()
+                                                   .id(source.getId())
+                                                   .speciality(transformEnumToSpecialityName(source.getSpeciality()))
+                                                   .quantityOfPlaces(source.getQuantityOfPlaces())
+                                                   .price(source.getPrice())
+                                                   .quantityOfBillablePlaces(source.getQuantityOfBillablePlaces())
+                                                   .build();
+
+        return specialityDto;
+    }
+
 
     @Named("transformSpecialityNameToEnum")
     static SpecialityName transformSpecialityNameToEnum(String specialityName) {
-        switch (specialityName.toUpperCase(Locale.ROOT)) {
+        specialityName = specialityName.toUpperCase(Locale.ROOT);
+        switch (specialityName) {
             case "МЕНЕДЖМЕНТ":             return SpecialityName.MANAGEMENT;
             case "КОМП\'ЮТЕРНІ НАУКИ":     return SpecialityName.COMPUTER_SCIENCE;
             case "ЕКОЛОГІЯ":               return SpecialityName.ECOLOGY;

@@ -1,10 +1,15 @@
 package com.example.diplomaspringproject1_0.dto;
 
-import lombok.Data;
+import lombok.*;
 
 import java.math.BigDecimal;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@Builder
 public class SpecialityDto {
 
     private Long id;
@@ -17,12 +22,14 @@ public class SpecialityDto {
 
     private Integer quantityOfBillablePlaces;
 
-    public SpecialityDto(String speciality,
+    public SpecialityDto(Long id,
+                         String speciality,
                          BigDecimal price,
                          Integer quantityOfPlaces) {
+        this.id = id;
         this.speciality = speciality;
         this.price = price;
         this.quantityOfPlaces = quantityOfPlaces;
-        this.quantityOfBillablePlaces = Integer.parseInt(String.valueOf(quantityOfPlaces * 0.4));
+        this.quantityOfBillablePlaces = (int) Float.parseFloat(String.valueOf(quantityOfPlaces * 0.4));
     }
 }
