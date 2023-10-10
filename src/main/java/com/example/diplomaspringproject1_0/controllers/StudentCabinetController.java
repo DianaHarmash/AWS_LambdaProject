@@ -25,21 +25,19 @@ public class StudentCabinetController {
                                     HttpStatus.CREATED);
     }
 
-    @DeleteMapping("{/id}")
+    @DeleteMapping("/{adminId}/delete/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteStudentCabinet() {
+    public void deleteStudentCabinet(@PathVariable Long adminId,
+                                     @PathVariable Long id) {
 
         // TODO: delete student cabinet
 
     }
 
-    @GetMapping("/{id}")
+    @GetMapping ("/{studentId}/balance")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<String> transitPayToTheBalance() {
-
-        // TODO: add transaction between a student and the university
-
-        return null;
+    public ResponseEntity<String> transitPayToTheBalance(@PathVariable Long studentId) {
+        return studentCabinetService.transitPayToTheBalance(studentId);
     }
 
 }
