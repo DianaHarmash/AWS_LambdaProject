@@ -13,9 +13,6 @@ import java.util.Optional;
 
 @Service
 public class BalanceService {
-
-    private final String SUCCESS_INCOME = "Оплата пройшла успішно";
-
     private final BalanceMapping balanceMapping;
     private final BalanceRepository balanceRepository;
     private final BalanceValidators balanceValidators;

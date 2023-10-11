@@ -5,6 +5,9 @@ import com.example.diplomaspringproject1_0.entity.Balance;
 import com.example.diplomaspringproject1_0.entity.enums.CodeOfOperation;
 import org.mapstruct.Mapper;
 
+import java.sql.Date;
+import java.time.LocalDate;
+
 @Mapper(componentModel = "spring")
 public interface BalanceMapping {
 
@@ -16,20 +19,20 @@ public interface BalanceMapping {
             balance.setId(source.getId());
         }
 
-        balance.setSum(source.getSum());
+        balance.setSum(source.getCodeOfOperation().getPayment());
         balance.setCodeOfOperation(source.getCodeOfOperation());
-        balance.setDate(source.getDate());
+        balance.setDate(Date.valueOf(LocalDate.now()));
 
         if (source.getCodeOfOperation().equals(CodeOfOperation.SALARY) ||
             source.getCodeOfOperation().equals(CodeOfOperation.ROOM) ||
             source.getCodeOfOperation().equals(CodeOfOperation.STUFF)) {
-            balance.setBalance(source.getBalance().subtract(source.getSum()));
+            balance.setBalance(source.getBalance().subtract(source.getCodeOfOperation().getPayment()));
         } else {
             if (source.getBalance() != null) {
-                balance.setBalance(source.getBalance().add(source.getSum()));
+                balance.setBalance(source.getBalance().add(source.getCodeOfOperation().getPayment()));
             }
             else {
-                balance.setBalance(source.getSum());
+                balance.setBalance(source.getCodeOfOperation().getPayment());
             }
 
         }

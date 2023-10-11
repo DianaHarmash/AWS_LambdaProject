@@ -32,4 +32,8 @@ public class BalanceDto {
         this.date = date;
         this.codeOfOperation = codeOfOperation;
     }
+
+//    public BalanceDto(CodeOfOperation codeOfOperation) {
+//        this.codeOfOperation = codeOfOperation;
+//    }
 }
