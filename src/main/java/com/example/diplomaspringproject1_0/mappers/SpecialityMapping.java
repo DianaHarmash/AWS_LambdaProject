@@ -74,4 +74,9 @@ public interface SpecialityMapping {
             default:                   return null;
         }
     }
+    default void setNewValuesInFields(Speciality specialityFromDb, SpecialityDto specialityDto) {
+        specialityFromDb.setPrice(specialityDto.getPrice());
+        specialityFromDb.setQuantityOfPlaces(specialityDto.getQuantityOfPlaces());
+        specialityFromDb.setQuantityOfBillablePlaces((int) Float.parseFloat(String.valueOf(specialityFromDb.getQuantityOfBillablePlaces() * 0.4)));
+    }
 }

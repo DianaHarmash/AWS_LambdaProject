@@ -71,7 +71,7 @@ public class UserService {
     }
     @Transactional
     public SystemUserDto updatingUserById(Long id, SystemUserDto systemUserDto) {
-        log.debug("Starting updatin user with id = {}", id);
+        log.debug("Starting updating user with id = {}", id);
 
         SystemUserDto userFromDb = getUserById(id).orElseThrow();
 

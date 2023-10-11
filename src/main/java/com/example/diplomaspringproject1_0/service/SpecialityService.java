@@ -1,8 +1,9 @@
 package com.example.diplomaspringproject1_0.service;
 
 import com.example.diplomaspringproject1_0.dto.SpecialityDto;
-import com.example.diplomaspringproject1_0.dto.StudentCabinetDto;
+import com.example.diplomaspringproject1_0.dto.SystemUserDto;
 import com.example.diplomaspringproject1_0.entity.Speciality;
+import com.example.diplomaspringproject1_0.entity.SystemUser;
 import com.example.diplomaspringproject1_0.entity.enums.SpecialityName;
 import com.example.diplomaspringproject1_0.mappers.SpecialityMapping;
 import com.example.diplomaspringproject1_0.repositories.SpecialtyRepository;
@@ -10,6 +11,8 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 import static com.example.diplomaspringproject1_0.mappers.SpecialityMapping.transformSpecialityNameToEnum;
 
@@ -41,17 +44,45 @@ public class SpecialityService {
 
         return savedSpeciality;
     }
-
-    public SpecialityDto getSpecialityBuSpecialityName(String requestedSpeciality) {
+    public Optional<SpecialityDto> getSpecialityBySpecialityName(String requestedSpeciality) {
         log.debug("Getting speciality for name = {}", requestedSpeciality);
 
         SpecialityName specialityName = transformSpecialityNameToEnum(requestedSpeciality);
 
-        Speciality speciality = specialtyRepository.findBySpeciality(specialityName)
-                                                   .orElseThrow();
+        Optional<Speciality> speciality = specialtyRepository.findBySpeciality(specialityName);
+        if (speciality.isEmpty()) {
+            return Optional.empty();
+        }
 
-        log.debug("Retrieving speciality with id = {}", speciality.getId());
-        SpecialityDto specialityDto = specialityMapping.specialityToSpecialityDto(speciality);
-        return specialityDto;
+
+        log.debug("Retrieving speciality with id = {}", speciality.get().getId());
+        SpecialityDto specialityDto = specialityMapping.specialityToSpecialityDto(speciality.get());
+        return Optional.of(specialityDto);
+    }
+    public SpecialityDto updateSpeciality(String speciality, Long adminId, SpecialityDto specialityDto) {
+
+        // TODO: add check for adminId
+
+        log.debug("Starting updating speciality = {}", speciality);
+
+        SpecialityDto specialityDtoFromDb = getSpecialityBySpecialityName(speciality).orElseThrow();
+
+        if (isChanged(specialityDtoFromDb, specialityDto)) {
+            Speciality specialityFromDb = specialityMapping.specialityDtoToSpeciality(specialityDtoFromDb);
+            specialityMapping.setNewValuesInFields(specialityFromDb, specialityDto);
+            Speciality savedSpeciality = specialtyRepository.save(specialityFromDb);
+            SpecialityDto savedSpecialityDto = specialityMapping.specialityToSpecialityDto(savedSpeciality);
+
+            log.debug("Updated speciality = {}", speciality);
+            return savedSpecialityDto;
+        }
+
+        log.debug("Speciality isn't changed for the given name = {}", speciality);
+        return specialityDtoFromDb;
+    }
+
+    private boolean isChanged(SpecialityDto specialityDtoFromDb, SpecialityDto specialityDto) {
+        return !specialityDtoFromDb.getPrice().equals(specialityDto.getPrice()) ||
+               !specialityDtoFromDb.getQuantityOfPlaces().equals(specialityDto.getQuantityOfPlaces());
     }
 }

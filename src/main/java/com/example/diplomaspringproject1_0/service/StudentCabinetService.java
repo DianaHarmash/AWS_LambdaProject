@@ -8,7 +8,6 @@ import com.example.diplomaspringproject1_0.entity.Speciality;
 import com.example.diplomaspringproject1_0.entity.StudentCabinet;
 import com.example.diplomaspringproject1_0.entity.SystemUser;
 import com.example.diplomaspringproject1_0.entity.enums.CodeOfOperation;
-import com.example.diplomaspringproject1_0.exceptions.ApiError;
 import com.example.diplomaspringproject1_0.exceptions.UserException;
 import com.example.diplomaspringproject1_0.mappers.SpecialityMapping;
 import com.example.diplomaspringproject1_0.mappers.StudentCabinetMapping;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static com.example.diplomaspringproject1_0.mappers.StudentCabinetMapping.buildStudentCabinet;
 import static com.example.diplomaspringproject1_0.mappers.StudentCabinetMapping.preBuildStudentCabinet;
@@ -64,7 +62,8 @@ public class StudentCabinetService {
         StudentCabinet studentCabinetFromDb = studentCabinetRepository.findByUserId(studentCabinetDto.getSystemUserDto().getId())
                                                                       .orElseThrow();
 
-        SpecialityDto specialityDto = specialityService.getSpecialityBuSpecialityName(studentCabinetDto.getSpeciality());
+        SpecialityDto specialityDto = specialityService.getSpecialityBySpecialityName(studentCabinetDto.getSpeciality())
+                                                       .orElseThrow();
         Speciality speciality = specialityMapping.specialityDtoToSpeciality(specialityDto);
         studentCabinetFromDb = buildStudentCabinet(studentCabinetFromDb, studentCabinetDto, speciality);
         studentCabinetRepository.save(studentCabinetFromDb);
@@ -103,6 +102,13 @@ public class StudentCabinetService {
 
         return new ResponseEntity<>(PAYMENT_IS_SUCCESSFUL,
                                     HttpStatus.OK);
+    }
+    public void deleteStudentCabinet(Long adminId, Long id) {
+        // TODO: add validation for adminId
+
+        log.debug("Staring deleting student cabinet with id = {}", id);
+        studentCabinetRepository.deleteById(id);
+        log.debug("Deleted student cabinet with id = {}", id);
     }
 
     private BalanceDto buildPaymentFromStudent(BigDecimal money) {

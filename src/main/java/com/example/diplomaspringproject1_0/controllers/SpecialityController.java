@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/speciality")
 public class SpecialityController {
@@ -25,10 +27,11 @@ public class SpecialityController {
                                     HttpStatus.CREATED);
     }
     @GetMapping("/{speciality}")
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.FOUND)
     public ResponseEntity<SpecialityDto> getSpecialityBuSpecialityName(@PathVariable String speciality) {
-        return new ResponseEntity<>(specialityService.getSpecialityBuSpecialityName(speciality),
-                                    HttpStatus.OK);
+        Optional<SpecialityDto> specialityDto = specialityService.getSpecialityBySpecialityName(speciality);
+
+        return new ResponseEntity<>(specialityDto.orElseThrow(), HttpStatus.FOUND);
     }
     @PutMapping("/{speciality}")
     @ResponseStatus(HttpStatus.OK)
@@ -39,5 +42,12 @@ public class SpecialityController {
         // TODO: add updating of the speciality
 
         return null;
+    }
+    @DeleteMapping ("/{speciality}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteSpeciality(@PathVariable String speciality) {
+
+        // TODO: add deleting of a speciality
+
     }
 }

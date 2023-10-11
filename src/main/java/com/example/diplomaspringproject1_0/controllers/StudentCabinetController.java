@@ -30,7 +30,7 @@ public class StudentCabinetController {
     public void deleteStudentCabinet(@PathVariable Long adminId,
                                      @PathVariable Long id) {
 
-        // TODO: delete student cabinet
+       studentCabinetService.deleteStudentCabinet(adminId, id);
 
     }
 
