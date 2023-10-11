@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -22,27 +24,23 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.FOUND)
     public ResponseEntity<SystemUserDto> getUserById(@PathVariable Long id) {
-        // TODO: add retrieving information about user
-
-        return null;
+        Optional<SystemUserDto> systemUserDto = userService.getUserById(id);
+        return new ResponseEntity<>(systemUserDto.orElseThrow(), HttpStatus.FOUND);
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<SystemUserDto> updateUser(@PathVariable Long id,
                                                     @RequestBody SystemUserDto systemUserDto) {
-        // TODO: add updating of the user
-
-        return null;
+        return new ResponseEntity<>(userService.updatingUserById(id, systemUserDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteUserById(@PathVariable Long id) {
-        // TODO: delete the user
-
+        userService.deleteUserById(id);
     }
 
 }

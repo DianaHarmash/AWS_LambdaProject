@@ -75,7 +75,6 @@ public class StudentCabinetService {
         StudentCabinetDto updatedStudentCabinet = studentCabinetMapping.studentCabinetToStudentCabinetDto(studentCabinetFromDb, systemUserDto);
         return updatedStudentCabinet;
     }
-
     public StudentCabinetDto preCreateStudentCabinetForUser(SystemUser systemUser) {
         log.debug("Starting creating cabinet for student with id = {}", systemUser.getId());
 
@@ -86,7 +85,6 @@ public class StudentCabinetService {
 
         return studentCabinetDto;
     }
-
     @Transactional
     public ResponseEntity<String> transitPayToTheBalance(Long studentId) {
         log.debug("Starting transferring payment from student with id = {}", studentId);

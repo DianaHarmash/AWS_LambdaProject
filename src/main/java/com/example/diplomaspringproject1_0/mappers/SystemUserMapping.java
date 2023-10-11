@@ -21,29 +21,6 @@ public interface SystemUserMapping {
     @Mapping(target = "source.rights", qualifiedByName = "transformEnumToStringRights")
     SystemUser systemUserDtoToSystemUser(SystemUserDto source);
 
-//    default SystemUsersDto systemUserToSystemUserDto(SystemUser source) {
-//        SystemUsersDto systemUsersDto = SystemUsersDto.builder()
-//                                 .id(source.getId())
-//                                 .surname(source.getSurname())
-//                                 .name(source.getName())
-//                                 .rights(source.getRights().name())
-//                                 .build();
-//
-//        return systemUsersDto;
-//    }
-//
-//    default SystemUser systemUserDtoToSystemUser(SystemUsersDto source) {
-//        SystemUser systemUser = SystemUser.builder()
-//                .id(source.getId())
-//                .surname(source.getSurname())
-//                .name(source.getName())
-//                .rights(transformStringRightsToEnum(source.getRights()))
-//                .build();
-//
-//        return systemUser;
-//    }
-//
-
     @Named("transformStringRightsToEnum")
     static Rights transformStringRightsToEnum(String rights) {
         switch (rights.toUpperCase(Locale.ROOT)) {
@@ -53,7 +30,6 @@ public interface SystemUserMapping {
             default: return null;
         }
     }
-
     @Named("transformEnumToStringRights")
     static String transformEnumToStringRights(Rights rights) {
         switch (rights) {
@@ -62,6 +38,10 @@ public interface SystemUserMapping {
             case FORBIDDEN: return "FORBIDDEN";
             default: return null;
         }
+    }
+    default void setNewNames(SystemUser userFromDb, SystemUserDto systemUserDto) {
+        userFromDb.setSurname(systemUserDto.getSurname());
+        userFromDb.setName(userFromDb.getName());
     }
 
 }
