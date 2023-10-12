@@ -123,13 +123,6 @@ public class StudentCabinetService {
 
         return Optional.of(studentCabinetDto);
     }
-    public void deleteStudentCabinet(Long adminId, Long id) {
-        // TODO: add validation for adminId
-
-        log.debug("Staring deleting student cabinet with id = {}", id);
-        studentCabinetRepository.deleteById(id);
-        log.debug("Deleted student cabinet with id = {}", id);
-    }
 
     private BalanceDto buildPaymentFromStudent(BigDecimal money) {
 

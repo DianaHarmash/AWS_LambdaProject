@@ -93,14 +93,6 @@ public class UserService {
 
         // TODO: add check for adminId
 
-        SystemUserDto systemUserDto = getUserById(id).orElseThrow();
-        if (systemUserDto.getRights().equalsIgnoreCase("STUDENT")) {
-            Optional<StudentCabinetDto> studentCabinetDto = studentCabinetService.getStudentCabinet(null,
-                                                                                                    systemUserDto.getSurname(),
-                                                                                                    systemUserDto.getName());
-            studentCabinetService.deleteStudentCabinet(adminId, systemUserDto.getId());
-        }
-
         log.debug("Starting deleting user with id = {}", id);
         systemUserRepository.deleteById(id);
         log.debug("Deleted user with id = {}", id);

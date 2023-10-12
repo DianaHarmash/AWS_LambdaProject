@@ -1,6 +1,7 @@
 package com.example.diplomaspringproject1_0.controllers;
 
 import com.example.diplomaspringproject1_0.dto.SpecialityDto;
+import com.example.diplomaspringproject1_0.exceptions.UserException;
 import com.example.diplomaspringproject1_0.service.SpecialityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class SpecialityController {
     @DeleteMapping ("/{speciality}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteSpeciality(@PathVariable String speciality,
-                                 @RequestParam Long adminId) {
+                                 @RequestParam Long adminId) throws UserException {
         specialityService.deleteSpeciality(adminId, speciality);
     }
 }

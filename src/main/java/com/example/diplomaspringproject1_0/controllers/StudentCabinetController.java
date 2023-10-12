@@ -28,18 +28,11 @@ public class StudentCabinetController {
     }
     @GetMapping()
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<StudentCabinetDto> getStudentCabinet(@RequestParam Long id,
+    public ResponseEntity<StudentCabinetDto> getStudentCabinet(@RequestParam(required = false) Long id,
                                                                @RequestParam(required = false) String surname,
                                                                @RequestParam(required = false) String name) {
         Optional<StudentCabinetDto> studentCabinetDto = studentCabinetService.getStudentCabinet(id, surname, name);
         return new ResponseEntity<>(studentCabinetDto.orElseThrow(), HttpStatus.FOUND);
-    }
-
-    @DeleteMapping("/{adminId}/delete/{id}")
-    @ResponseStatus(value = HttpStatus.OK)
-    public void deleteStudentCabinet(@PathVariable Long adminId,
-                                     @PathVariable Long id) {
-       studentCabinetService.deleteStudentCabinet(adminId, id);
     }
 
     @GetMapping ("/{studentId}/balance")
