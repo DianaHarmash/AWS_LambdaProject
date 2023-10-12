@@ -10,4 +10,6 @@ public interface SpecialtyRepository extends CrudRepository<Speciality, Long> {
 
     Optional<Speciality> findBySpeciality(SpecialityName specialityName);
 
+    void deleteBySpeciality(SpecialityName speciality);
+
 }

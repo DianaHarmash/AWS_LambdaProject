@@ -38,16 +38,13 @@ public class SpecialityController {
     public ResponseEntity<SpecialityDto> updateSpeciality(@PathVariable String speciality,
                                                           @RequestParam Long adminId,
                                                           @RequestBody SpecialityDto specialityDto) {
-
-        // TODO: add updating of the speciality
-
-        return null;
+        return new ResponseEntity<>(specialityService.updateSpeciality(adminId, speciality, specialityDto),
+                                    HttpStatus.OK);
     }
     @DeleteMapping ("/{speciality}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteSpeciality(@PathVariable String speciality) {
-
-        // TODO: add deleting of a speciality
-
+    public void deleteSpeciality(@PathVariable String speciality,
+                                 @RequestParam Long adminId) {
+        specialityService.deleteSpeciality(adminId, speciality);
     }
 }

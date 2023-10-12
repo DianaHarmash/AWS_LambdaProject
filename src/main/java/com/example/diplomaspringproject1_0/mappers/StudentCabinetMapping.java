@@ -28,6 +28,26 @@ public interface StudentCabinetMapping {
 
         return studentCabinetDto;
     }
+    default StudentCabinetDto studentCabinetToStudentCabinetDto(StudentCabinet studentCabinet) {
+        SystemUserDto systemUserDto = SystemUserDto.builder()
+            .id(studentCabinet.getUser().getId())
+            .surname(studentCabinet.getUser().getSurname())
+            .name(studentCabinet.getUser().getName())
+            .rights(studentCabinet.getUser().getRights().name())
+            .build();
+
+        StudentCabinetDto studentCabinetDto = StudentCabinetDto.builder()
+            .id(studentCabinet.getId())
+            .year(studentCabinet.getYear())
+            .systemUserDto(systemUserDto)
+            .speciality(studentCabinet.getSpeciality() != null ?
+                transformEnumToSpecialityName(studentCabinet.getSpeciality().getSpeciality()) :
+                null)
+            .group(studentCabinet.getGroupName())
+            .build();
+
+        return studentCabinetDto;
+    }
 
     static StudentCabinet preBuildStudentCabinet(SystemUser systemUserDto) {
         StudentCabinet studentCabinet = new StudentCabinet();

@@ -59,7 +59,8 @@ public class SpecialityService {
         SpecialityDto specialityDto = specialityMapping.specialityToSpecialityDto(speciality.get());
         return Optional.of(specialityDto);
     }
-    public SpecialityDto updateSpeciality(String speciality, Long adminId, SpecialityDto specialityDto) {
+    @Transactional
+    public SpecialityDto updateSpeciality(Long adminId, String speciality, SpecialityDto specialityDto) {
 
         // TODO: add check for adminId
 
@@ -79,6 +80,15 @@ public class SpecialityService {
 
         log.debug("Speciality isn't changed for the given name = {}", speciality);
         return specialityDtoFromDb;
+    }
+    public void deleteSpeciality(Long adminId, String name) {
+
+        // TODO: added check for adminId
+
+        log.debug("Starting deleting speciality = {}", name);
+        SpecialityName specialityName = transformSpecialityNameToEnum(name);
+        specialtyRepository.deleteBySpeciality(specialityName);
+        log.debug("Deleted speciality = {}", name);
     }
 
     private boolean isChanged(SpecialityDto specialityDtoFromDb, SpecialityDto specialityDto) {
