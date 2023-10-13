@@ -89,7 +89,6 @@ public class SpecialityService {
     public void deleteSpeciality(Long adminId, String name) throws UserException {
 
         // TODO: added check for adminId
-        // TODO: add check if the speciality owns any students
 
         log.debug("Starting deleting speciality = {}", name);
         SpecialityName specialityName = transformSpecialityNameToEnum(name);
