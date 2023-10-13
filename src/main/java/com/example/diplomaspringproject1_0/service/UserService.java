@@ -88,7 +88,11 @@ public class UserService {
         log.debug("User isn't changed for the given id = {}", id);
         return userFromDb;
     }
-    public void deleteUserById(Long id) {
+    @Transactional
+    public void deleteUserById(Long adminId, Long id) {
+
+        // TODO: add check for adminId
+
         log.debug("Starting deleting user with id = {}", id);
         systemUserRepository.deleteById(id);
         log.debug("Deleted user with id = {}", id);

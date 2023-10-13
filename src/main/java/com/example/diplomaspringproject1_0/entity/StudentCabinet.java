@@ -2,6 +2,8 @@ package com.example.diplomaspringproject1_0.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 
@@ -19,6 +21,7 @@ public class StudentCabinet {
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private SystemUser user;
 
     @Column
@@ -29,6 +32,7 @@ public class StudentCabinet {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "speciality_id", referencedColumnName = "id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private Speciality speciality;
 
     @Column(name = "debt_balance")

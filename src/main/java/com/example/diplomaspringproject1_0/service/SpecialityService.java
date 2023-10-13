@@ -5,11 +5,14 @@ import com.example.diplomaspringproject1_0.dto.SystemUserDto;
 import com.example.diplomaspringproject1_0.entity.Speciality;
 import com.example.diplomaspringproject1_0.entity.SystemUser;
 import com.example.diplomaspringproject1_0.entity.enums.SpecialityName;
+import com.example.diplomaspringproject1_0.exceptions.ApiError;
+import com.example.diplomaspringproject1_0.exceptions.UserException;
 import com.example.diplomaspringproject1_0.mappers.SpecialityMapping;
 import com.example.diplomaspringproject1_0.repositories.SpecialtyRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -59,7 +62,8 @@ public class SpecialityService {
         SpecialityDto specialityDto = specialityMapping.specialityToSpecialityDto(speciality.get());
         return Optional.of(specialityDto);
     }
-    public SpecialityDto updateSpeciality(String speciality, Long adminId, SpecialityDto specialityDto) {
+    @Transactional
+    public SpecialityDto updateSpeciality(Long adminId, String speciality, SpecialityDto specialityDto) {
 
         // TODO: add check for adminId
 
@@ -79,6 +83,24 @@ public class SpecialityService {
 
         log.debug("Speciality isn't changed for the given name = {}", speciality);
         return specialityDtoFromDb;
+    }
+    public void deleteSpeciality(Long adminId, String name) throws UserException {
+
+        // TODO: added check for adminId
+        // TODO: add check if the speciality owns any students
+
+        log.debug("Starting deleting speciality = {}", name);
+        SpecialityName specialityName = transformSpecialityNameToEnum(name);
+        try {
+            specialtyRepository.deleteBySpeciality(specialityName.toString());
+        } catch (NullPointerException ex) {
+            throw new UserException(ApiError.builder()
+                                            .message("Speciality name was defined as null.")
+                                            .userMessage("Такої спеціальності не знайдено. Спробуйте ще раз.")
+                                            .statusCode(HttpStatus.BAD_REQUEST)
+                                            .build());
+        } catch (RuntimeException ex) { }
+        log.debug("Deleted speciality = {}", name);
     }
 
     private boolean isChanged(SpecialityDto specialityDtoFromDb, SpecialityDto specialityDto) {

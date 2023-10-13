@@ -14,6 +14,7 @@ import com.example.diplomaspringproject1_0.mappers.StudentCabinetMapping;
 import com.example.diplomaspringproject1_0.mappers.SystemUserMapping;
 import com.example.diplomaspringproject1_0.repositories.StudentCabinetRepository;
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -103,12 +104,24 @@ public class StudentCabinetService {
         return new ResponseEntity<>(PAYMENT_IS_SUCCESSFUL,
                                     HttpStatus.OK);
     }
-    public void deleteStudentCabinet(Long adminId, Long id) {
-        // TODO: add validation for adminId
+    public Optional<StudentCabinetDto> getStudentCabinet(Long id, String surname, String name) {
+        Optional<StudentCabinet> studentCabinet = Optional.empty();
 
-        log.debug("Staring deleting student cabinet with id = {}", id);
-        studentCabinetRepository.deleteById(id);
-        log.debug("Deleted student cabinet with id = {}", id);
+        if (id != null) {
+            log.debug("Getting student cabinet by id, and id = {}", id);
+            studentCabinet = studentCabinetRepository.findById(id);
+        } else if (surname != null && name != null) {
+            log.debug("Getting student cabinet by surname = {}, name = {}", surname, name);
+            studentCabinet = studentCabinetRepository.findBySurnameAndName(surname, name);
+        }
+
+        if (studentCabinet.isEmpty()) {
+            return Optional.empty();
+        }
+
+        StudentCabinetDto studentCabinetDto = studentCabinetMapping.studentCabinetToStudentCabinetDto(studentCabinet.get());
+
+        return Optional.of(studentCabinetDto);
     }
 
     private BalanceDto buildPaymentFromStudent(BigDecimal money) {
