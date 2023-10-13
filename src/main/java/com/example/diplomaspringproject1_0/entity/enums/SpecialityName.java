@@ -7,7 +7,8 @@ public enum SpecialityName {
     MATHEMATICS("Математика"),
     COMPUTER_ENGINEERING("Комп\'ютерна інжинерія"),
     SYSTEM_ANALYSIS("Системна аналітика"),
-    HEAT_ENERGY("Теплова енергетика");
+    HEAT_ENERGY("Теплова енергетика"),
+    TEST_NAME("Test");
 
     private final String specialityName;
 

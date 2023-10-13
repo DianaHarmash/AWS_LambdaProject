@@ -22,4 +22,7 @@ public interface StudentCabinetRepository extends CrudRepository<StudentCabinet,
                  + "JOIN system_user su on su.id = student_cabinet.user_id "
                  + "WHERE su.surname = :param1 and su.name = :param2", nativeQuery = true)
     Optional<StudentCabinet> findBySurnameAndName(@Param(value = "param1") String surname, @Param(value = "param2") String name);
+
+    @Query(value = "UPDATE student_cabinet SET debt_balance = null, group_name = null WHERE speciality_id = ?1", nativeQuery = true)
+    Optional<StudentCabinet> removeSpecialityInformationWhenRemovingSpeciality(Long id);
 }

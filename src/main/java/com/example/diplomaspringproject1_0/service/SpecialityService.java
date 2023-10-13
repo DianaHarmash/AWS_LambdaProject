@@ -1,14 +1,13 @@
 package com.example.diplomaspringproject1_0.service;
 
 import com.example.diplomaspringproject1_0.dto.SpecialityDto;
-import com.example.diplomaspringproject1_0.dto.SystemUserDto;
 import com.example.diplomaspringproject1_0.entity.Speciality;
-import com.example.diplomaspringproject1_0.entity.SystemUser;
 import com.example.diplomaspringproject1_0.entity.enums.SpecialityName;
 import com.example.diplomaspringproject1_0.exceptions.ApiError;
 import com.example.diplomaspringproject1_0.exceptions.UserException;
 import com.example.diplomaspringproject1_0.mappers.SpecialityMapping;
 import com.example.diplomaspringproject1_0.repositories.SpecialtyRepository;
+import com.example.diplomaspringproject1_0.repositories.StudentCabinetRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +24,14 @@ public class SpecialityService {
 
     private final SpecialityMapping specialityMapping;
     private final SpecialtyRepository specialtyRepository;
+    private final StudentCabinetRepository studentCabinetRepository;
     @Autowired
     public SpecialityService(SpecialityMapping specialityMapping,
-                             SpecialtyRepository specialtyRepository) {
+                             SpecialtyRepository specialtyRepository,
+                             StudentCabinetRepository studentCabinetRepository) {
         this.specialityMapping = specialityMapping;
         this.specialtyRepository = specialtyRepository;
+        this.studentCabinetRepository = studentCabinetRepository;
     }
 
     @Transactional
@@ -91,6 +93,10 @@ public class SpecialityService {
 
         log.debug("Starting deleting speciality = {}", name);
         SpecialityName specialityName = transformSpecialityNameToEnum(name);
+        Speciality speciality = specialtyRepository.findBySpeciality(specialityName).orElseThrow();
+        try {
+            studentCabinetRepository.removeSpecialityInformationWhenRemovingSpeciality(speciality.getId());
+        } catch (RuntimeException ex) { }
         try {
             specialtyRepository.deleteBySpeciality(specialityName.toString());
         } catch (NullPointerException ex) {
