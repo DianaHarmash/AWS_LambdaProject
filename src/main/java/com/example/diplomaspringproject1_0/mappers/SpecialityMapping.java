@@ -58,7 +58,7 @@ public interface SpecialityMapping {
             case "КОМП\'ЮТЕРНА ІНЖИНЕРІЯ": return SpecialityName.COMPUTER_ENGINEERING;
             case "СИСТЕМНА АНАЛІТИКА":     return SpecialityName.SYSTEM_ANALYSIS;
             case "ТЕПЛОВА ЕНЕРГЕТИКА":     return SpecialityName.HEAT_ENERGY;
-            default:                       return null;
+            default:                       return SpecialityName.TEST_NAME;
         }
     }
     @Named("transformEnumToSpecialityName")
@@ -71,7 +71,7 @@ public interface SpecialityMapping {
             case COMPUTER_ENGINEERING: return "Комп\'ютерна інжинерія";
             case SYSTEM_ANALYSIS:      return "Системна аналітика";
             case HEAT_ENERGY:          return "Теплова енергетика";
-            default:                   return null;
+            default:                   return "Test";
         }
     }
     default void setNewValuesInFields(Speciality specialityFromDb, SpecialityDto specialityDto) {

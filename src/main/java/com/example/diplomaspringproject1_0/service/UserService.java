@@ -90,12 +90,15 @@ public class UserService {
     }
     @Transactional
     public void deleteUserById(Long adminId, Long id) {
-
-        // TODO: add check for adminId
+        checkAdminRights(adminId);
 
         log.debug("Starting deleting user with id = {}", id);
         systemUserRepository.deleteById(id);
         log.debug("Deleted user with id = {}", id);
+    }
+    public boolean checkAdminRights(Long userId) {
+        SystemUserDto systemUserDto = getUserById(userId).orElseThrow();
+        return systemUserDto.getRights().equals("ADMIN");
     }
 
     private boolean isChanged(SystemUserDto userFromDb, SystemUserDto systemUserDto) {
