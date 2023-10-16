@@ -8,6 +8,7 @@ import com.example.diplomaspringproject1_0.exceptions.UserException;
 import com.example.diplomaspringproject1_0.mappers.SpecialityMapping;
 import com.example.diplomaspringproject1_0.repositories.SpecialtyRepository;
 import com.example.diplomaspringproject1_0.repositories.StudentCabinetRepository;
+import com.example.diplomaspringproject1_0.validators.SpecialityValidators;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,21 +26,29 @@ public class SpecialityService {
     private final SpecialityMapping specialityMapping;
     private final SpecialtyRepository specialtyRepository;
     private final StudentCabinetRepository studentCabinetRepository;
+//    private final UserService userService;
+    private final SpecialityValidators specialityValidators;
     @Autowired
     public SpecialityService(SpecialityMapping specialityMapping,
                              SpecialtyRepository specialtyRepository,
-                             StudentCabinetRepository studentCabinetRepository) {
+                             StudentCabinetRepository studentCabinetRepository,
+                             /*UserService userService,*/
+                             SpecialityValidators specialityValidators) {
         this.specialityMapping = specialityMapping;
         this.specialtyRepository = specialtyRepository;
         this.studentCabinetRepository = studentCabinetRepository;
+//        this.userService = userService;
+        this.specialityValidators = specialityValidators;
     }
 
     @Transactional
-    public SpecialityDto createSpeciality(Long adminId, SpecialityDto specialityDto) {
-        // TODO: check admin rights
+    public SpecialityDto createSpeciality(Long adminId, SpecialityDto specialityDto) throws UserException    {
+
+//        userService.checkAdminRights(adminId);
+
         log.debug("Starting creating speciality = {}", specialityDto.getSpeciality());
 
-        // TODO: add validation for speciality name
+        specialityValidators.validate(specialityDto);
 
         Speciality specialityToSave = specialityMapping.specialityDtoToSpeciality(specialityDto);
         Speciality speciality = specialtyRepository.save(specialityToSave);
@@ -67,7 +76,7 @@ public class SpecialityService {
     @Transactional
     public SpecialityDto updateSpeciality(Long adminId, String speciality, SpecialityDto specialityDto) {
 
-        // TODO: add check for adminId
+//        userService.checkAdminRights(adminId);
 
         log.debug("Starting updating speciality = {}", speciality);
 
@@ -88,7 +97,7 @@ public class SpecialityService {
     }
     public void deleteSpeciality(Long adminId, String name) throws UserException {
 
-        // TODO: added check for adminId
+//        userService.checkAdminRights(adminId);
 
         log.debug("Starting deleting speciality = {}", name);
         SpecialityName specialityName = transformSpecialityNameToEnum(name);

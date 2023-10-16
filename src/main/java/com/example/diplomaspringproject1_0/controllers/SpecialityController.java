@@ -23,7 +23,7 @@ public class SpecialityController {
 
     @PostMapping()
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<SpecialityDto> createSpeciality(@RequestParam Long adminId, @RequestBody SpecialityDto specialityDto) {
+    public ResponseEntity<SpecialityDto> createSpeciality(@RequestParam Long adminId, @RequestBody SpecialityDto specialityDto) throws UserException {
         return new ResponseEntity<>(specialityService.createSpeciality(adminId, specialityDto),
                                     HttpStatus.CREATED);
     }

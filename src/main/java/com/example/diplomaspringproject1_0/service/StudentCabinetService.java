@@ -40,24 +40,29 @@ public class StudentCabinetService {
     private final SpecialityMapping specialityMapping;
     private final StudentCabinetMapping studentCabinetMapping;
     private final BalanceService balanceService;
+//    private final UserService userService;
     @Autowired
     public StudentCabinetService(StudentCabinetRepository studentCabinetRepository,
                                  SpecialityService specialityService,
                                  SystemUserMapping systemUserMapping,
                                  SpecialityMapping specialityMapping,
                                  StudentCabinetMapping studentCabinetMapping,
-                                 BalanceService balanceService) {
+                                 BalanceService balanceService
+                                 /*UserService userService*/) {
         this.studentCabinetRepository = studentCabinetRepository;
         this.specialityService = specialityService;
         this.systemUserMapping = systemUserMapping;
         this.specialityMapping = specialityMapping;
         this.studentCabinetMapping = studentCabinetMapping;
         this.balanceService = balanceService;
+//        this.userService = userService;
     }
 
     @Transactional
     public StudentCabinetDto updateStudentCabinet(Long adminId, StudentCabinetDto studentCabinetDto) {
-        // TODO: check rights of admin
+
+//        userService.checkAdminRights(adminId);
+
         log.debug("Starting filling student cabinet for student id = {}", studentCabinetDto.getSystemUserDto().getId());
 
         StudentCabinet studentCabinetFromDb = studentCabinetRepository.findByUserId(studentCabinetDto.getSystemUserDto().getId())
