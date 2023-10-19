@@ -3,6 +3,7 @@ package com.example.diplomaspringproject1_0.controllers;
 import com.example.diplomaspringproject1_0.dto.SpecialityDto;
 import com.example.diplomaspringproject1_0.exceptions.UserException;
 import com.example.diplomaspringproject1_0.service.SpecialityService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,14 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/speciality")
 public class SpecialityController {
 
     private final SpecialityService specialityService;
-    @Autowired
-    public SpecialityController(SpecialityService specialityService) {
-        this.specialityService = specialityService;
-    }
 
     @PostMapping()
     @ResponseStatus(value = HttpStatus.CREATED)

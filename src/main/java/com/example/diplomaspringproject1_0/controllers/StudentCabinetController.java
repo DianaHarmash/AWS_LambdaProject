@@ -4,20 +4,19 @@ import com.example.diplomaspringproject1_0.dto.StudentCabinetDto;
 import com.example.diplomaspringproject1_0.dto.SystemUserDto;
 import com.example.diplomaspringproject1_0.service.StudentCabinetService;
 import java.util.Optional;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/users/students")
 public class StudentCabinetController {
 
     private final StudentCabinetService studentCabinetService;
-    @Autowired
-    public StudentCabinetController(StudentCabinetService studentCabinetService) {
-        this.studentCabinetService = studentCabinetService;
-    }
 
     @PutMapping()
     @ResponseStatus(value = HttpStatus.OK)
