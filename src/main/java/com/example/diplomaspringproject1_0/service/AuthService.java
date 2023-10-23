@@ -1,6 +1,6 @@
-package com.example.diplomaspringproject1_0.auth;
+package com.example.diplomaspringproject1_0.service;
 
-import com.example.diplomaspringproject1_0.security.JwtConfiguration;
+import com.example.diplomaspringproject1_0.dto.LoginResponse;
 import com.example.diplomaspringproject1_0.security.JwtProperties;
 import com.example.diplomaspringproject1_0.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.example.diplomaspringproject1_0.auth;
+package com.example.diplomaspringproject1_0.dto;
 
 import lombok.*;
 

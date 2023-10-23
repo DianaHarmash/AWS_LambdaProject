@@ -1,12 +1,11 @@
 package com.example.diplomaspringproject1_0.controllers;
 
-import com.example.diplomaspringproject1_0.auth.AuthService;
-import com.example.diplomaspringproject1_0.auth.LoginResponse;
+import com.example.diplomaspringproject1_0.service.AuthService;
+import com.example.diplomaspringproject1_0.dto.LoginResponse;
 import com.example.diplomaspringproject1_0.dto.SystemUserDto;
 import com.example.diplomaspringproject1_0.exceptions.UserException;
 import com.example.diplomaspringproject1_0.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
