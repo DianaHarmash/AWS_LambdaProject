@@ -1,23 +1,33 @@
 package com.example.diplomaspringproject1_0.service;
 
+import com.example.diplomaspringproject1_0.auth.AuthService;
+import com.example.diplomaspringproject1_0.auth.LoginResponse;
 import com.example.diplomaspringproject1_0.dto.StudentCabinetDto;
 import com.example.diplomaspringproject1_0.dto.SystemUserDto;
 import com.example.diplomaspringproject1_0.entity.SystemUser;
 import com.example.diplomaspringproject1_0.entity.enums.Entities;
 import com.example.diplomaspringproject1_0.entity.enums.Rights;
-import com.example.diplomaspringproject1_0.exceptions.ApiError;
 import com.example.diplomaspringproject1_0.exceptions.UserException;
 import com.example.diplomaspringproject1_0.facades.Validators;
 import com.example.diplomaspringproject1_0.mappers.SystemUserMapping;
 import com.example.diplomaspringproject1_0.repositories.SystemUserRepository;
+import com.example.diplomaspringproject1_0.security.JwtConfiguration;
+import com.example.diplomaspringproject1_0.security.UserPrincipal;
 import jakarta.transaction.Transactional;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -47,7 +57,7 @@ public class UserService {
 
         SystemUser userToSave = systemUserMapping.systemUserDtoToSystemUser(request);
         SystemUser user = systemUserRepository.save(userToSave);
-        if (user.getRights().equals(Rights.STUDENT)) {
+        if (user.getRights().equals(Rights.ROLE_USER)) {
             StudentCabinetDto studentCabinetDto = studentCabinetService.preCreateStudentCabinetForUser(user);
             log.debug("Created new student cabinet with id = {} for user id = {}", studentCabinetDto.getId(), studentCabinetDto.getSystemUserDto().getId());
         }
@@ -99,6 +109,11 @@ public class UserService {
     public boolean checkAdminRights(Long userId) {
         SystemUserDto systemUserDto = getUserById(userId).orElseThrow();
         return systemUserDto.getRights().equals("ADMIN");
+    }
+
+    public Optional<SystemUserDto> findByEmail(String email) {
+        Optional<SystemUser> systemUser = systemUserRepository.findSystemUserByEmail(email);
+        return systemUser.map(systemUserMapping::systemUserToSystemUserDto);
     }
 
     private boolean isChanged(SystemUserDto userFromDb, SystemUserDto systemUserDto) {

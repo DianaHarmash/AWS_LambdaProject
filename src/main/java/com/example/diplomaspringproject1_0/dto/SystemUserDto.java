@@ -1,5 +1,6 @@
 package com.example.diplomaspringproject1_0.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 @AllArgsConstructor
@@ -15,6 +16,11 @@ public class SystemUserDto {
     private String surname;
 
     private String name;
+
+    private String email;
+
+    @JsonIgnore
+    private String password;
 
     private String rights;
 

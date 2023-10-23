@@ -24,8 +24,8 @@ public interface SystemUserMapping {
     @Named("transformStringRightsToEnum")
     static Rights transformStringRightsToEnum(String rights) {
         switch (rights.toUpperCase(Locale.ROOT)) {
-            case "STUDENT": return Rights.STUDENT;
-            case "ADMIN": return Rights.ADMIN;
+            case "ROLE_USER": return Rights.ROLE_USER;
+            case "ROLE_ADMIN": return Rights.ROLE_ADMIN;
             case "FORBIDDEN": return Rights.FORBIDDEN;
             default: return null;
         }
@@ -33,8 +33,8 @@ public interface SystemUserMapping {
     @Named("transformEnumToStringRights")
     static String transformEnumToStringRights(Rights rights) {
         switch (rights) {
-            case STUDENT: return "STUDENT";
-            case ADMIN: return "ADMIN";
+            case ROLE_USER: return "ROLE_USER";
+            case ROLE_ADMIN: return "ROLE_ADMIN";
             case FORBIDDEN: return "FORBIDDEN";
             default: return null;
         }

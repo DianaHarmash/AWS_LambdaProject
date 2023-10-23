@@ -1,9 +1,11 @@
 package com.example.diplomaspringproject1_0.auth;
 
-import com.example.diplomaspringproject1_0.security.JwtConfiguration;
+import com.example.diplomaspringproject1_0.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -11,14 +13,22 @@ import java.util.List;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final JwtConfiguration jwtConfiguration;
+    private final AuthService authService;
 
     @PostMapping("/login")
     public LoginResponse authUser(@RequestBody LoginRequest loginRequest) {
-        String token = jwtConfiguration.jwtToken(1L, loginRequest.getEmail(), List.of("USER"));
+        return authService.attemptLogin(loginRequest.getEmail(), loginRequest.getPassword());
+    }
 
-        return LoginResponse.builder()
-                            .token(token)
-                            .build();
+    @GetMapping("/secure")
+    public String secure(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return "If you see it, you're logged in  as user " + userPrincipal.getEmail() + ".\n" +
+                "User ID: " + userPrincipal.getUserId() +  ".\n" +
+                "User role: " + Arrays.toString(List.of(userPrincipal.getAuthorities()).toArray()) + ".\n";
+    }
+
+    @GetMapping("/forAdmin")
+    public String testAdminRoles(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return "If you see it, you are an ADMIN! + User id: " + userPrincipal.getUserId();
     }
 }

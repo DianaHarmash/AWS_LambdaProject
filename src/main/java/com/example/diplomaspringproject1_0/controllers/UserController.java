@@ -1,5 +1,6 @@
 package com.example.diplomaspringproject1_0.controllers;
 
+import com.example.diplomaspringproject1_0.auth.LoginResponse;
 import com.example.diplomaspringproject1_0.dto.SystemUserDto;
 import com.example.diplomaspringproject1_0.exceptions.UserException;
 import com.example.diplomaspringproject1_0.service.UserService;
