@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,5 +31,10 @@ public class AuthController {
     @GetMapping("/forAdmin")
     public String testAdminRoles(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         return "If you see it, you are an ADMIN! + User id: " + userPrincipal.getUserId();
+    }
+
+    @GetMapping("/info")
+    public String getUser(Principal principal) {
+        return principal.getName();
     }
 }

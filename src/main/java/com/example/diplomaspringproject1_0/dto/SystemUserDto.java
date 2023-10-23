@@ -19,7 +19,6 @@ public class SystemUserDto {
 
     private String email;
 
-    @JsonIgnore
     private String password;
 
     private String rights;

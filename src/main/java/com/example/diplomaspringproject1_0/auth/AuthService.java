@@ -1,6 +1,7 @@
 package com.example.diplomaspringproject1_0.auth;
 
 import com.example.diplomaspringproject1_0.security.JwtConfiguration;
+import com.example.diplomaspringproject1_0.security.JwtProperties;
 import com.example.diplomaspringproject1_0.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final JwtConfiguration jwtConfiguration;
+    private final JwtProperties jwtProperties;
 
     private final AuthenticationManager authenticationManager;
 
@@ -30,7 +31,7 @@ public class AuthService {
                                       .map(GrantedAuthority::getAuthority)
                                       .toList();
 
-        String token = jwtConfiguration.jwtToken(principal.getUserId(), principal.getEmail(), roles);
+        String token = jwtProperties.jwtToken(principal.getUserId(), principal.getEmail(), roles);
 
         return LoginResponse.builder()
                 .token(token)

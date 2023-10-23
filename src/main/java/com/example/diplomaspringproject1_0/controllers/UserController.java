@@ -1,5 +1,6 @@
 package com.example.diplomaspringproject1_0.controllers;
 
+import com.example.diplomaspringproject1_0.auth.AuthService;
 import com.example.diplomaspringproject1_0.auth.LoginResponse;
 import com.example.diplomaspringproject1_0.dto.SystemUserDto;
 import com.example.diplomaspringproject1_0.exceptions.UserException;
@@ -19,10 +20,13 @@ public class UserController {
 
     private final UserService userService;
 
+    private final AuthService authService;
+
     @PostMapping()
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<SystemUserDto> createUser(@RequestBody SystemUserDto systemUsersDto) throws UserException {
-        return new ResponseEntity<>(userService.createUser(systemUsersDto), HttpStatus.OK);
+    public ResponseEntity<LoginResponse> createUser(@RequestBody SystemUserDto systemUsersDto) throws UserException {
+        SystemUserDto userDto = userService.createUser(systemUsersDto);
+        return new ResponseEntity<>(authService.attemptLogin(userDto.getEmail(), userDto.getPassword()), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")

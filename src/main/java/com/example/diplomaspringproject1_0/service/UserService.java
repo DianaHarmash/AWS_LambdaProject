@@ -9,16 +9,26 @@ import com.example.diplomaspringproject1_0.exceptions.UserException;
 import com.example.diplomaspringproject1_0.facades.Validators;
 import com.example.diplomaspringproject1_0.mappers.SystemUserMapping;
 import com.example.diplomaspringproject1_0.repositories.SystemUserRepository;
+import com.example.diplomaspringproject1_0.security.PasswordEncoder;
+import com.example.diplomaspringproject1_0.security.UserPrincipal;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+
+import static com.example.diplomaspringproject1_0.security.PasswordEncoder.getPasswordEncoder;
 
 @Service
 @Slf4j
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final SystemUserRepository systemUserRepository;
     private final SystemUserMapping systemUserMapping;
@@ -41,7 +51,12 @@ public class UserService {
 
         log.debug("Starting creating new user with rights: {}", request.getRights());
 
+        String encrypted = getPasswordEncoder().encode(request.getPassword());
+
         SystemUser userToSave = systemUserMapping.systemUserDtoToSystemUser(request);
+
+        userToSave.setPassword(encrypted);
+
         SystemUser user = systemUserRepository.save(userToSave);
         if (user.getRights().equals(Rights.ROLE_USER)) {
             StudentCabinetDto studentCabinetDto = studentCabinetService.preCreateStudentCabinetForUser(user);
@@ -49,6 +64,8 @@ public class UserService {
         }
 
         SystemUserDto systemUserDto = systemUserMapping.systemUserToSystemUserDto(user);
+
+        systemUserDto.setPassword(request.getPassword());
         log.debug("Created user with id = {}", systemUserDto.getId());
 
         return systemUserDto;
@@ -95,6 +112,17 @@ public class UserService {
     public boolean checkAdminRights(Long userId) {
         SystemUserDto systemUserDto = getUserById(userId).orElseThrow();
         return systemUserDto.getRights().equals("ADMIN");
+    }
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        SystemUserDto userDto = findByEmail(email).orElseThrow();
+
+        return UserPrincipal.builder()
+                .userId(userDto.getId())
+                .email(email)
+                .password(userDto.getPassword())
+                .authorities(List.of(new SimpleGrantedAuthority(userDto.getRights())))
+                .build();
     }
 
     public Optional<SystemUserDto> findByEmail(String email) {
