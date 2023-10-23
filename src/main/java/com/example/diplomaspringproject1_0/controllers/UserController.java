@@ -1,5 +1,6 @@
 package com.example.diplomaspringproject1_0.controllers;
 
+import com.example.diplomaspringproject1_0.dto.LoginRequest;
 import com.example.diplomaspringproject1_0.service.AuthService;
 import com.example.diplomaspringproject1_0.dto.LoginResponse;
 import com.example.diplomaspringproject1_0.dto.SystemUserDto;
@@ -34,6 +35,13 @@ public class UserController {
         Optional<SystemUserDto> systemUserDto = userService.getUserById(id);
         return new ResponseEntity<>(systemUserDto.orElseThrow(), HttpStatus.FOUND);
     }
+
+    @GetMapping("/token")
+    @ResponseStatus(value = HttpStatus.OK)
+    public LoginResponse getToken(@RequestBody LoginRequest request) {
+        return authService.attemptLogin(request.getEmail(), request.getPassword());
+    }
+
 
     @PatchMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)

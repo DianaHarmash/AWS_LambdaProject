@@ -37,10 +37,10 @@ public class WebSecurityConfig   {
                 .formLogin().disable() // disable web foem of authentication
                 .securityMatcher("/**")
                 .authorizeHttpRequests(registery -> {
-                  registery.requestMatchers("/users").permitAll() // permitted to all
-                           .requestMatchers("/auth/login").permitAll()
-                           .requestMatchers("/auth/forAdmin").hasRole("ADMIN")
-                           .anyRequest().authenticated(); // for all other requests authentication is
+                    registery.requestMatchers("/users").permitAll() // permitted to all
+                             .requestMatchers("/users/token").permitAll()
+                             .requestMatchers("/auth/forAdmin").hasRole("ADMIN")
+                             .anyRequest().authenticated(); // for all other requests authentication is
                 })
                 .exceptionHandling()
                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
