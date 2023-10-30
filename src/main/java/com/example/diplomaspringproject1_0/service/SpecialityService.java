@@ -42,7 +42,7 @@ public class SpecialityService {
     }
 
     @Transactional
-    public SpecialityDto createSpeciality(Long adminId, SpecialityDto specialityDto) throws UserException    {
+    public SpecialityDto createSpeciality(SpecialityDto specialityDto) throws UserException    {
 
 //        userService.checkAdminRights(adminId);
 
@@ -74,7 +74,7 @@ public class SpecialityService {
         return Optional.of(specialityDto);
     }
     @Transactional
-    public SpecialityDto updateSpeciality(Long adminId, String speciality, SpecialityDto specialityDto) {
+    public SpecialityDto updateSpeciality(String speciality, SpecialityDto specialityDto) {
 
 //        userService.checkAdminRights(adminId);
 
@@ -95,7 +95,7 @@ public class SpecialityService {
         log.debug("Speciality isn't changed for the given name = {}", speciality);
         return specialityDtoFromDb;
     }
-    public void deleteSpeciality(Long adminId, String name) throws UserException {
+    public void deleteSpeciality(String name) throws UserException {
 
 //        userService.checkAdminRights(adminId);
 

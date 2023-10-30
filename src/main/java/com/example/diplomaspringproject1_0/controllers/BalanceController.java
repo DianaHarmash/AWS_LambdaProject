@@ -11,15 +11,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/{userId}/balance")
+@RequestMapping("/balance")
 public class BalanceController {
 
     private final BalanceService balanceService;
     @PostMapping()
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<BalanceDto> manageBalance(@PathVariable Long userId,
-                                                    @RequestBody BalanceDto balanceDto) throws UserException {
-        return new ResponseEntity<>(balanceService.manageBalance(userId, balanceDto),
+    public ResponseEntity<BalanceDto> manageBalance(@RequestBody BalanceDto balanceDto) throws UserException {
+        return new ResponseEntity<>(balanceService.manageBalance(balanceDto),
                                     HttpStatus.OK);
     }
 }

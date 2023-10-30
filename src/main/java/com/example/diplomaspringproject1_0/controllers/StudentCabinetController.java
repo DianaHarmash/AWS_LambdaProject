@@ -18,11 +18,10 @@ public class StudentCabinetController {
 
     private final StudentCabinetService studentCabinetService;
 
-    @PutMapping()
+    @PutMapping("/update")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<StudentCabinetDto> updateStudentCabinetForUser(@RequestParam Long adminId,
-                                                                         @RequestBody StudentCabinetDto systemUserDto) {
-        return new ResponseEntity<>(studentCabinetService.updateStudentCabinet(adminId, systemUserDto),
+    public ResponseEntity<StudentCabinetDto> updateStudentCabinetForUser(@RequestBody StudentCabinetDto systemUserDto) {
+        return new ResponseEntity<>(studentCabinetService.updateStudentCabinet(systemUserDto),
                                     HttpStatus.CREATED);
     }
     @GetMapping()
@@ -34,10 +33,11 @@ public class StudentCabinetController {
         return new ResponseEntity<>(studentCabinetDto.orElseThrow(), HttpStatus.FOUND);
     }
 
-    @GetMapping ("/{studentId}/balance")
+    @GetMapping ("/balance")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<String> transitPayToTheBalance(@PathVariable Long studentId) {
-        return studentCabinetService.transitPayToTheBalance(studentId);
+    public ResponseEntity<String> transitPayToTheBalance(@RequestParam String surname,
+                                                         @RequestParam String name) {
+        return studentCabinetService.transitPayToTheBalance(surname, name);
     }
 
 }

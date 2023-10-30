@@ -39,11 +39,16 @@ public class WebSecurityConfig   {
                 .authorizeHttpRequests(registery -> {
                     registery.requestMatchers("/users").permitAll() // permitted to all
                              .requestMatchers("/users/token").permitAll()
-                             .requestMatchers("/auth/forAdmin").hasRole("ADMIN")
+                             .requestMatchers("/users/{id}").hasRole("ADMIN")
+                             .requestMatchers("/speciality/**").hasRole("ADMIN")
+                             .requestMatchers("/users/students/update").hasRole("ADMIN")
+                             .requestMatchers("/users/students/balance").hasRole("USER")
+                             .requestMatchers("/balance").hasRole("ADMIN")
+//                             .requestMatchers("/auth/forAdmin").hasRole("ADMIN")
                              .anyRequest().authenticated(); // for all other requests authentication is
                 })
                 .exceptionHandling()
-                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
+                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.FORBIDDEN));
 
         return http.build();
     }

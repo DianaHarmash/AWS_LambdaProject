@@ -29,10 +29,10 @@ public class UserController {
         return new ResponseEntity<>(authService.attemptLogin(userDto.getEmail(), userDto.getPassword()), HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{email}")
     @ResponseStatus(value = HttpStatus.FOUND)
-    public ResponseEntity<SystemUserDto> getUserById(@PathVariable Long id) {
-        Optional<SystemUserDto> systemUserDto = userService.getUserById(id);
+    public ResponseEntity<SystemUserDto> getUserByEmail(@PathVariable String email) {
+        Optional<SystemUserDto> systemUserDto = userService.getUserById(email);
         return new ResponseEntity<>(systemUserDto.orElseThrow(), HttpStatus.FOUND);
     }
 
@@ -43,18 +43,17 @@ public class UserController {
     }
 
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{email}")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<SystemUserDto> updateUser(@PathVariable Long id,
+    public ResponseEntity<SystemUserDto> updateUser(@PathVariable String email,
                                                     @RequestBody SystemUserDto systemUserDto) {
-        return new ResponseEntity<>(userService.updatingUserById(id, systemUserDto), HttpStatus.OK);
+        return new ResponseEntity<>(userService.updatingUserByEmail(email, systemUserDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteUserById(@PathVariable Long id,
-                               @RequestParam Long adminId) {
-        userService.deleteUserById(adminId, id);
+    public void deleteUserById(@PathVariable Long id) {
+        userService.deleteUserById(id);
     }
 
 }

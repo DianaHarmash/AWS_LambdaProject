@@ -39,9 +39,10 @@ public interface SystemUserMapping {
             default: return null;
         }
     }
-    default void setNewNames(SystemUser userFromDb, SystemUserDto systemUserDto) {
+    default void setNewFields(SystemUser userFromDb, SystemUserDto systemUserDto) {
         userFromDb.setSurname(systemUserDto.getSurname());
-        userFromDb.setName(userFromDb.getName());
+        userFromDb.setName(systemUserDto.getName());
+        userFromDb.setEmail(systemUserDto.getEmail());
     }
 
 }

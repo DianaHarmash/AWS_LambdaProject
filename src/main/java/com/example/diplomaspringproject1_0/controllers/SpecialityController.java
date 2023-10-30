@@ -21,8 +21,8 @@ public class SpecialityController {
 
     @PostMapping()
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<SpecialityDto> createSpeciality(@RequestParam Long adminId, @RequestBody SpecialityDto specialityDto) throws UserException {
-        return new ResponseEntity<>(specialityService.createSpeciality(adminId, specialityDto),
+    public ResponseEntity<SpecialityDto> createSpeciality(@RequestBody SpecialityDto specialityDto) throws UserException {
+        return new ResponseEntity<>(specialityService.createSpeciality(specialityDto),
                                     HttpStatus.CREATED);
     }
     @GetMapping("/{speciality}")
@@ -35,15 +35,13 @@ public class SpecialityController {
     @PutMapping("/{speciality}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<SpecialityDto> updateSpeciality(@PathVariable String speciality,
-                                                          @RequestParam Long adminId,
                                                           @RequestBody SpecialityDto specialityDto) {
-        return new ResponseEntity<>(specialityService.updateSpeciality(adminId, speciality, specialityDto),
+        return new ResponseEntity<>(specialityService.updateSpeciality(speciality, specialityDto),
                                     HttpStatus.OK);
     }
     @DeleteMapping ("/{speciality}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteSpeciality(@PathVariable String speciality,
-                                 @RequestParam Long adminId) throws UserException {
-        specialityService.deleteSpeciality(adminId, speciality);
+    public void deleteSpeciality(@PathVariable String speciality) throws UserException {
+        specialityService.deleteSpeciality(speciality);
     }
 }
