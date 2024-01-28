@@ -43,6 +43,7 @@ public class UserController {
     }
 
 
+    // TODO: add password validation
     @PatchMapping("/{email}")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<SystemUserDto> updateUser(@PathVariable String email,

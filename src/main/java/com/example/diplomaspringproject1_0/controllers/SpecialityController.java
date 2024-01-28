@@ -17,6 +17,8 @@ import java.util.Optional;
 @RequestMapping("/speciality")
 public class SpecialityController {
 
+    // TODO: add quantity of occupied places
+
     private final SpecialityService specialityService;
 
     @PostMapping()
