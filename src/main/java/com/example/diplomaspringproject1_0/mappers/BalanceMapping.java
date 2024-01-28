@@ -29,7 +29,8 @@ public interface BalanceMapping {
             balance.setBalance(source.getBalance().subtract(source.getCodeOfOperation().getPayment()));
         } else {
             if (source.getBalance() != null) {
-                balance.setBalance(source.getBalance().add(source.getCodeOfOperation().getPayment()));
+                balance.setBalance(source.getBalance().add(source.getSum()));
+                balance.setSum(source.getSum());
             }
             else {
                 balance.setBalance(source.getCodeOfOperation().getPayment());

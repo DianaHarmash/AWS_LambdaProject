@@ -3,25 +3,22 @@ package com.example.diplomaspringproject1_0.controllers;
 import com.example.diplomaspringproject1_0.dto.BalanceDto;
 import com.example.diplomaspringproject1_0.exceptions.UserException;
 import com.example.diplomaspringproject1_0.service.BalanceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/{userId}/balance")
+@RequiredArgsConstructor
+@RequestMapping("/balance")
 public class BalanceController {
-    private final BalanceService balanceService;
-    @Autowired
-    public BalanceController(BalanceService balanceService) {
-        this.balanceService = balanceService;
-    }
 
+    private final BalanceService balanceService;
     @PostMapping()
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<BalanceDto> manageBalance(@PathVariable Long userId,
-                                                    @RequestBody BalanceDto balanceDto) throws UserException {
-        return new ResponseEntity<>(balanceService.manageBalance(userId, balanceDto),
+    public ResponseEntity<BalanceDto> manageBalance(@RequestBody BalanceDto balanceDto) throws UserException {
+        return new ResponseEntity<>(balanceService.manageBalance(balanceDto),
                                     HttpStatus.OK);
     }
 }

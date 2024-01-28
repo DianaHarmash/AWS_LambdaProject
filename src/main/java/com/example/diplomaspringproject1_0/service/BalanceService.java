@@ -30,7 +30,7 @@ public class BalanceService {
     }
 
     @Transactional
-    public BalanceDto manageBalance(Long userId, BalanceDto balanceDto) throws UserException {
+    public BalanceDto manageBalance(BalanceDto balanceDto) throws UserException {
 
 //        userService.checkAdminRights(userId);
 

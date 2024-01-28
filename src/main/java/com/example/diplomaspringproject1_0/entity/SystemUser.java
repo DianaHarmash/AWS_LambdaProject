@@ -23,6 +23,13 @@ public class SystemUser {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false,
+            unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Rights rights;

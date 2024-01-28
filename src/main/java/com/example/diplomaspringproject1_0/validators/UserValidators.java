@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 public class UserValidators implements Validator<SystemUserDto> {
 
     Pattern engPattern = Pattern.compile("^[A-Z]{1}[a-z]{2,}$");
-    Pattern ukrainianPattern = Pattern.compile("^[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ]{1}[абвгґдеєжзиіїйклмнопрстуфхцчшщьюя]{2,}$");
+    Pattern ukrainianPattern = Pattern.compile("^[АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ]{1}[абвгґдеєжзиіїйклмнопрстуфхцчшщьюя']{2,}$");
 
     @Override
     public void validate(SystemUserDto systemUserDto) throws UserException {
@@ -34,16 +34,16 @@ public class UserValidators implements Validator<SystemUserDto> {
         if (!engPattern.matcher(name).matches() &&
             !ukrainianPattern.matcher(name).matches()) {
             throw new UserException(ApiError.builder()
-                                            .message("Surname mismatches the format.")
+                                            .message("Name mismatches the format.")
                                             .userMessage("Ім\'я не відповідає формату.")
                                             .statusCode(HttpStatus.BAD_REQUEST)
                                             .build());
         }
 
-        if (!Rights.ADMIN.name().equals(rights) &&
-            !Rights.STUDENT.name().equals(rights)) {
+        if (!Rights.ROLE_ADMIN.name().equals(rights) &&
+            !Rights.ROLE_USER.name().equals(rights)) {
             throw new UserException(ApiError.builder()
-                                            .message("Surname mismatches the format.")
+                                            .message("Rights mismatch the format.")
                                             .userMessage("Права не відповідають формату.")
                                             .statusCode(HttpStatus.BAD_REQUEST)
                                             .build());

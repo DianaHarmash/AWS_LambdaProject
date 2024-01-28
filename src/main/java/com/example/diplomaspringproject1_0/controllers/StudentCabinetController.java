@@ -4,26 +4,24 @@ import com.example.diplomaspringproject1_0.dto.StudentCabinetDto;
 import com.example.diplomaspringproject1_0.dto.SystemUserDto;
 import com.example.diplomaspringproject1_0.service.StudentCabinetService;
 import java.util.Optional;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/users/students")
 public class StudentCabinetController {
 
     private final StudentCabinetService studentCabinetService;
-    @Autowired
-    public StudentCabinetController(StudentCabinetService studentCabinetService) {
-        this.studentCabinetService = studentCabinetService;
-    }
 
-    @PutMapping()
+    @PutMapping("/update")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<StudentCabinetDto> updateStudentCabinetForUser(@RequestParam Long adminId,
-                                                                         @RequestBody StudentCabinetDto systemUserDto) {
-        return new ResponseEntity<>(studentCabinetService.updateStudentCabinet(adminId, systemUserDto),
+    public ResponseEntity<StudentCabinetDto> updateStudentCabinetForUser(@RequestBody StudentCabinetDto systemUserDto) {
+        return new ResponseEntity<>(studentCabinetService.updateStudentCabinet(systemUserDto),
                                     HttpStatus.CREATED);
     }
     @GetMapping()
@@ -35,10 +33,11 @@ public class StudentCabinetController {
         return new ResponseEntity<>(studentCabinetDto.orElseThrow(), HttpStatus.FOUND);
     }
 
-    @GetMapping ("/{studentId}/balance")
+    @GetMapping ("/balance")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<String> transitPayToTheBalance(@PathVariable Long studentId) {
-        return studentCabinetService.transitPayToTheBalance(studentId);
+    public ResponseEntity<String> transitPayToTheBalance(@RequestParam String surname,
+                                                         @RequestParam String name) {
+        return studentCabinetService.transitPayToTheBalance(surname, name);
     }
 
 }

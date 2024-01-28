@@ -5,24 +5,28 @@ import com.example.diplomaspringproject1_0.dto.SystemUserDto;
 import com.example.diplomaspringproject1_0.entity.SystemUser;
 import com.example.diplomaspringproject1_0.entity.enums.Entities;
 import com.example.diplomaspringproject1_0.entity.enums.Rights;
-import com.example.diplomaspringproject1_0.exceptions.ApiError;
 import com.example.diplomaspringproject1_0.exceptions.UserException;
 import com.example.diplomaspringproject1_0.facades.Validators;
 import com.example.diplomaspringproject1_0.mappers.SystemUserMapping;
 import com.example.diplomaspringproject1_0.repositories.SystemUserRepository;
+import com.example.diplomaspringproject1_0.security.UserPrincipal;
 import jakarta.transaction.Transactional;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+
+import static com.example.diplomaspringproject1_0.security.PasswordEncoder.getPasswordEncoder;
 
 @Service
 @Slf4j
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final SystemUserRepository systemUserRepository;
     private final SystemUserMapping systemUserMapping;
@@ -45,22 +49,29 @@ public class UserService {
 
         log.debug("Starting creating new user with rights: {}", request.getRights());
 
+        String encrypted = getPasswordEncoder().encode(request.getPassword());
+
         SystemUser userToSave = systemUserMapping.systemUserDtoToSystemUser(request);
+
+        userToSave.setPassword(encrypted);
+
         SystemUser user = systemUserRepository.save(userToSave);
-        if (user.getRights().equals(Rights.STUDENT)) {
+        if (user.getRights().equals(Rights.ROLE_USER)) {
             StudentCabinetDto studentCabinetDto = studentCabinetService.preCreateStudentCabinetForUser(user);
             log.debug("Created new student cabinet with id = {} for user id = {}", studentCabinetDto.getId(), studentCabinetDto.getSystemUserDto().getId());
         }
 
         SystemUserDto systemUserDto = systemUserMapping.systemUserToSystemUserDto(user);
+
+        systemUserDto.setPassword(request.getPassword());
         log.debug("Created user with id = {}", systemUserDto.getId());
 
         return systemUserDto;
     }
-    public Optional<SystemUserDto> getUserById(Long id) {
-        log.debug("Getting user by id, and id = {}", id);
+    public Optional<SystemUserDto> getUserById(String email) {
+        log.debug("Getting user by email, where email is {}", email);
 
-        Optional<SystemUser> systemUser = systemUserRepository.findById(id);
+        Optional<SystemUser> systemUser = systemUserRepository.findSystemUserByEmail(email);
         if (!systemUser.isPresent()) {
             return Optional.empty();
         }
@@ -70,39 +81,54 @@ public class UserService {
         return Optional.of(systemUserDto);
     }
     @Transactional
-    public SystemUserDto updatingUserById(Long id, SystemUserDto systemUserDto) {
-        log.debug("Starting updating user with id = {}", id);
+    public SystemUserDto updatingUserByEmail(String email, SystemUserDto systemUserDto) {
+        log.debug("Starting updating user by email, where email is {}", email);
 
-        SystemUserDto userFromDb = getUserById(id).orElseThrow();
+        SystemUserDto userFromDb = getUserById(email).orElseThrow();
+
+        String encrypted = getPasswordEncoder().encode(systemUserDto.getPassword());
+
+        systemUserDto.setPassword(encrypted);
 
         if (isChanged(userFromDb, systemUserDto)) {
             SystemUser systemUserFromBb = systemUserMapping.systemUserDtoToSystemUser(userFromDb);
-            systemUserMapping.setNewNames(systemUserFromBb, systemUserDto);
+            systemUserMapping.setNewFields(systemUserFromBb, systemUserDto);
             SystemUser savedUser = systemUserRepository.save(systemUserFromBb);
             SystemUserDto savedUserDto = systemUserMapping.systemUserToSystemUserDto(savedUser);
 
-            log.debug("Updated user with id = {}", id);
+            log.debug("Finishing updating user by email, where email is {}", email);
             return savedUserDto;
         }
 
-        log.debug("User isn't changed for the given id = {}", id);
+        log.debug("User with email, where email is {}, is not changed.", email);
         return userFromDb;
     }
     @Transactional
-    public void deleteUserById(Long adminId, Long id) {
-        checkAdminRights(adminId);
-
+    public void deleteUserById(Long id) {
         log.debug("Starting deleting user with id = {}", id);
         systemUserRepository.deleteById(id);
         log.debug("Deleted user with id = {}", id);
     }
-    public boolean checkAdminRights(Long userId) {
-        SystemUserDto systemUserDto = getUserById(userId).orElseThrow();
-        return systemUserDto.getRights().equals("ADMIN");
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        SystemUserDto userDto = findByEmail(email).orElseThrow();
+
+        return UserPrincipal.builder()
+                .userId(userDto.getId())
+                .email(email)
+                .password(userDto.getPassword())
+                .authorities(List.of(new SimpleGrantedAuthority(userDto.getRights())))
+                .build();
+    }
+
+    public Optional<SystemUserDto> findByEmail(String email) {
+        Optional<SystemUser> systemUser = systemUserRepository.findSystemUserByEmail(email);
+        return systemUser.map(systemUserMapping::systemUserToSystemUserDto);
     }
 
     private boolean isChanged(SystemUserDto userFromDb, SystemUserDto systemUserDto) {
         return !userFromDb.getSurname().equals(systemUserDto.getSurname()) ||
-               !userFromDb.getName().equals(systemUserDto.getName());
+               !userFromDb.getName().equals(systemUserDto.getName()) ||
+               !userFromDb.getEmail().equals(systemUserDto.getEmail());
     }
 }

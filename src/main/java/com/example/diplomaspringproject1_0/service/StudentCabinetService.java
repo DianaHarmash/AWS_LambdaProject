@@ -59,7 +59,7 @@ public class StudentCabinetService {
     }
 
     @Transactional
-    public StudentCabinetDto updateStudentCabinet(Long adminId, StudentCabinetDto studentCabinetDto) {
+    public StudentCabinetDto updateStudentCabinet(StudentCabinetDto studentCabinetDto) {
 
 //        userService.checkAdminRights(adminId);
 
@@ -91,16 +91,16 @@ public class StudentCabinetService {
         return studentCabinetDto;
     }
     @Transactional
-    public ResponseEntity<String> transitPayToTheBalance(Long studentId) {
-        log.debug("Starting transferring payment from student with id = {}", studentId);
+    public ResponseEntity<String> transitPayToTheBalance(String surname, String name) {
+        log.debug("Starting transferring payment from {}, {}", surname, name);
 
-        StudentCabinet studentCabinetFromDb = studentCabinetRepository.findByUserId(studentId)
+        StudentCabinet studentCabinetFromDb = studentCabinetRepository.findBySurnameAndName(surname, name)
                                                                       .orElseThrow();
 
         BalanceDto balanceDto = buildPaymentFromStudent(studentCabinetFromDb.getDebtBalance());
         try {
-            BalanceDto transferredFunds = balanceService.manageBalance(studentCabinetFromDb.getId(), balanceDto);
-            log.debug("Transferring completed for student with id = {}", studentId);
+            BalanceDto transferredFunds = balanceService.manageBalance(balanceDto);
+            log.debug("Transferring completed for student = {}, {}", surname, name);
         } catch (UserException e) {
             return new ResponseEntity<>(PAYMENT_IS_FAILED,
                                         HttpStatus.BAD_REQUEST);
