@@ -2,6 +2,7 @@ package com.example.diplomaspringproject1_0.service;
 
 import com.example.diplomaspringproject1_0.dto.StudentCabinetDto;
 import com.example.diplomaspringproject1_0.dto.SystemUserDto;
+import com.example.diplomaspringproject1_0.dto.SystemUserDtoForDisplay;
 import com.example.diplomaspringproject1_0.entity.SystemUser;
 import com.example.diplomaspringproject1_0.entity.enums.Entities;
 import com.example.diplomaspringproject1_0.entity.enums.Rights;
@@ -12,6 +13,7 @@ import com.example.diplomaspringproject1_0.mappers.SystemUserMapping;
 import com.example.diplomaspringproject1_0.repositories.SystemUserRepository;
 import com.example.diplomaspringproject1_0.security.UserPrincipal;
 import jakarta.transaction.Transactional;
+import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,7 +48,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public SystemUserDto createUser(SystemUserDto request) throws UserException {
+    public SystemUserDtoForDisplay createUser(SystemUserDto request) throws UserException {
         validators.getValidators(Entities.USER).validate(request);
         log.debug("Starting creating new user with rights: {}", request.getRights());
 
@@ -69,47 +71,43 @@ public class UserService implements UserDetailsService {
             log.debug("Created new student cabinet with id = {} for user id = {}", studentCabinetDto.getId(), studentCabinetDto.getSystemUserDto().getId());
         }
 
-        SystemUserDto systemUserDto = systemUserMapping.systemUserToSystemUserDto(user);
+        SystemUserDtoForDisplay systemUserDto = systemUserMapping.systemUserToSystemUserDtoForDisplay(user);
 
-        systemUserDto.setPassword(request.getPassword());
         log.debug("Created user with id = {}", systemUserDto.getId());
 
         return systemUserDto;
     }
-    public Optional<SystemUserDto> getUserById(String email) {
+    public Optional<SystemUserDtoForDisplay> getUserByEmail(String email) {
         log.debug("Getting user by email, where email is {}", email);
 
         Optional<SystemUser> systemUser = systemUserRepository.findSystemUserByEmail(email);
-        if (!systemUser.isPresent()) {
+        if (systemUser.isEmpty()) {
             return Optional.empty();
         }
 
-        SystemUserDto systemUserDto = systemUserMapping.systemUserToSystemUserDto(systemUser.get());
+        SystemUserDtoForDisplay systemUserDto = systemUserMapping.systemUserToSystemUserDtoForDisplay(systemUser.get());
 
         return Optional.of(systemUserDto);
     }
     @Transactional
-    public SystemUserDto updatingUserByEmail(String email, SystemUserDto systemUserDto) {
+    public SystemUserDtoForDisplay updatingUserByEmail(String email, SystemUserDto systemUserDto) {
         log.debug("Starting updating user by email, where email is {}", email);
 
-        SystemUserDto userFromDb = getUserById(email).orElseThrow();
-
-        String encrypted = getPasswordEncoder().encode(systemUserDto.getPassword());
-
-        systemUserDto.setPassword(encrypted);
+        SystemUser userFromDb = systemUserRepository.findSystemUserByEmail(email).orElseThrow(
+            NoSuchElementException::new);
 
         if (isChanged(userFromDb, systemUserDto)) {
-            SystemUser systemUserFromBb = systemUserMapping.systemUserDtoToSystemUser(userFromDb);
-            systemUserMapping.setNewFields(systemUserFromBb, systemUserDto);
-            SystemUser savedUser = systemUserRepository.save(systemUserFromBb);
-            SystemUserDto savedUserDto = systemUserMapping.systemUserToSystemUserDto(savedUser);
+            systemUserMapping.setNewFields(userFromDb, systemUserDto);
+            SystemUser savedUser = systemUserRepository.save(userFromDb);
+            SystemUserDtoForDisplay savedUserDto = systemUserMapping.systemUserToSystemUserDtoForDisplay(savedUser);
 
             log.debug("Finishing updating user by email, where email is {}", email);
             return savedUserDto;
         }
 
+        SystemUserDtoForDisplay unmodifiedUser = systemUserMapping.systemUserToSystemUserDtoForDisplay(userFromDb);
         log.debug("User with email, where email is {}, is not changed.", email);
-        return userFromDb;
+        return unmodifiedUser;
     }
     @Transactional
     public void deleteUserById(Long id) {
@@ -134,7 +132,7 @@ public class UserService implements UserDetailsService {
         return systemUser.map(systemUserMapping::systemUserToSystemUserDto);
     }
 
-    private boolean isChanged(SystemUserDto userFromDb, SystemUserDto systemUserDto) {
+    private boolean isChanged(SystemUser userFromDb, SystemUserDto systemUserDto) {
         return !userFromDb.getSurname().equals(systemUserDto.getSurname()) ||
                !userFromDb.getName().equals(systemUserDto.getName()) ||
                !userFromDb.getEmail().equals(systemUserDto.getEmail());

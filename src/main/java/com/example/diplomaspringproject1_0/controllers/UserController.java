@@ -1,6 +1,7 @@
 package com.example.diplomaspringproject1_0.controllers;
 
 import com.example.diplomaspringproject1_0.dto.LoginRequest;
+import com.example.diplomaspringproject1_0.dto.SystemUserDtoForDisplay;
 import com.example.diplomaspringproject1_0.service.AuthService;
 import com.example.diplomaspringproject1_0.dto.LoginResponse;
 import com.example.diplomaspringproject1_0.dto.SystemUserDto;
@@ -25,14 +26,14 @@ public class UserController {
     @PostMapping()
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<LoginResponse> createUser(@RequestBody SystemUserDto systemUsersDto) throws UserException {
-        SystemUserDto userDto = userService.createUser(systemUsersDto);
-        return new ResponseEntity<>(authService.attemptLogin(userDto.getEmail(), userDto.getPassword()), HttpStatus.CREATED);
+        userService.createUser(systemUsersDto);
+        return new ResponseEntity<>(authService.attemptLogin(systemUsersDto.getEmail(), systemUsersDto.getPassword()), HttpStatus.CREATED);
     }
 
     @GetMapping("/{email}")
     @ResponseStatus(value = HttpStatus.FOUND)
-    public ResponseEntity<SystemUserDto> getUserByEmail(@PathVariable String email) {
-        Optional<SystemUserDto> systemUserDto = userService.getUserById(email);
+    public ResponseEntity<SystemUserDtoForDisplay> getUserByEmail(@PathVariable String email) {
+        Optional<SystemUserDtoForDisplay> systemUserDto = userService.getUserByEmail(email);
         return new ResponseEntity<>(systemUserDto.orElseThrow(), HttpStatus.FOUND);
     }
 
@@ -46,8 +47,8 @@ public class UserController {
     // TODO: add password validation
     @PatchMapping("/{email}")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<SystemUserDto> updateUser(@PathVariable String email,
-                                                    @RequestBody SystemUserDto systemUserDto) {
+    public ResponseEntity<SystemUserDtoForDisplay> updateUser(@PathVariable String email,
+                                                              @RequestBody SystemUserDto systemUserDto) {
         return new ResponseEntity<>(userService.updatingUserByEmail(email, systemUserDto), HttpStatus.OK);
     }
 
