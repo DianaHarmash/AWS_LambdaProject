@@ -16,7 +16,6 @@ public class BalanceController {
 
     private final BalanceService balanceService;
     @PostMapping()
-    @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<BalanceDto> manageBalance(@RequestBody BalanceDto balanceDto) throws UserException {
         return new ResponseEntity<>(balanceService.manageBalance(balanceDto),
                                     HttpStatus.OK);

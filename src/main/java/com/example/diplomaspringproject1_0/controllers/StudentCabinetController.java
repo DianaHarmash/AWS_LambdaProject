@@ -19,20 +19,17 @@ public class StudentCabinetController {
     private final StudentCabinetService studentCabinetService;
 
     @PutMapping("/update")
-    @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<StudentCabinetDto> updateStudentCabinetForUser(@RequestBody StudentCabinetDto systemUserDto) {
         return new ResponseEntity<>(studentCabinetService.updateStudentCabinet(systemUserDto),
                                     HttpStatus.CREATED);
     }
     @GetMapping("/display")
-    @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<StudentCabinetDto> getStudentCabinet(@RequestParam(required = false) String email) {
         Optional<StudentCabinetDto> studentCabinetDto = studentCabinetService.getStudentCabinet(email);
         return new ResponseEntity<>(studentCabinetDto.orElseThrow(), HttpStatus.FOUND);
     }
 
     @GetMapping ("/balance")
-    @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<String> transitPayToTheBalance(@RequestParam String email) {
         return studentCabinetService.transitPayToTheBalance(email);
     }

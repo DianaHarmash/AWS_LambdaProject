@@ -24,34 +24,29 @@ public class UserController {
     private final AuthService authService;
 
     @PostMapping()
-    @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<LoginResponse> createUser(@RequestBody SystemUserDto systemUsersDto) throws UserException {
         userService.createUser(systemUsersDto);
         return new ResponseEntity<>(authService.attemptLogin(systemUsersDto.getEmail(), systemUsersDto.getPassword()), HttpStatus.CREATED);
     }
 
     @GetMapping("/{email}")
-    @ResponseStatus(value = HttpStatus.FOUND)
     public ResponseEntity<SystemUserDtoForDisplay> getUserByEmail(@PathVariable String email) {
         Optional<SystemUserDtoForDisplay> systemUserDto = userService.getUserByEmail(email);
         return new ResponseEntity<>(systemUserDto.orElseThrow(), HttpStatus.FOUND);
     }
 
     @GetMapping("/token")
-    @ResponseStatus(value = HttpStatus.OK)
     public LoginResponse getToken(@RequestBody LoginRequest request) {
         return authService.attemptLogin(request.getEmail(), request.getPassword());
     }
 
     @PatchMapping("/{email}")
-    @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<SystemUserDtoForDisplay> updateUser(@PathVariable String email,
                                                               @RequestBody SystemUserDto systemUserDto) {
         return new ResponseEntity<>(userService.updatingUserByEmail(email, systemUserDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.OK)
     public void deleteUserById(@PathVariable Long id) {
         userService.deleteUserById(id);
     }

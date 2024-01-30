@@ -28,21 +28,18 @@ public class SpecialityController {
                                     HttpStatus.CREATED);
     }
     @GetMapping("/display/{speciality}")
-    @ResponseStatus(value = HttpStatus.FOUND)
     public ResponseEntity<SpecialityDto> getSpecialityBuSpecialityName(@PathVariable String speciality) {
         Optional<SpecialityDto> specialityDto = specialityService.getSpecialityBySpecialityName(speciality);
 
         return new ResponseEntity<>(specialityDto.orElseThrow(), HttpStatus.FOUND);
     }
     @PutMapping("/{speciality}")
-    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<SpecialityDto> updateSpeciality(@PathVariable String speciality,
                                                           @RequestBody SpecialityDto specialityDto) {
         return new ResponseEntity<>(specialityService.updateSpeciality(speciality, specialityDto),
                                     HttpStatus.OK);
     }
     @DeleteMapping ("/{speciality}")
-    @ResponseStatus(HttpStatus.OK)
     public void deleteSpeciality(@PathVariable String speciality) throws UserException {
         specialityService.deleteSpeciality(speciality);
     }
