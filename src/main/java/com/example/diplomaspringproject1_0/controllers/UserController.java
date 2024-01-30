@@ -43,8 +43,6 @@ public class UserController {
         return authService.attemptLogin(request.getEmail(), request.getPassword());
     }
 
-
-    // TODO: add password validation
     @PatchMapping("/{email}")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<SystemUserDtoForDisplay> updateUser(@PathVariable String email,

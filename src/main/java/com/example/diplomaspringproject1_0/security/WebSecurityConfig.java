@@ -40,11 +40,11 @@ public class WebSecurityConfig   {
                     registery.requestMatchers("/users").permitAll() // permitted to all
                              .requestMatchers("/users/token").permitAll()
                              .requestMatchers("/users/{id}").hasRole("ADMIN")
-                             .requestMatchers("/speciality/**").hasRole("ADMIN")
+                             .requestMatchers("/speciality/{speciality}").hasRole("ADMIN")
                              .requestMatchers("/users/students/update").hasRole("ADMIN")
                              .requestMatchers("/users/students/balance").hasRole("USER")
+                             .requestMatchers("/users/students/display").hasAnyRole("USER", "ADMIN")
                              .requestMatchers("/balance").hasRole("ADMIN")
-//                             .requestMatchers("/auth/forAdmin").hasRole("ADMIN")
                              .anyRequest().authenticated(); // for all other requests authentication is
                 })
                 .exceptionHandling()

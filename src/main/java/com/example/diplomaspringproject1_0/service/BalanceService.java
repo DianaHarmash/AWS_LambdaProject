@@ -31,9 +31,6 @@ public class BalanceService {
 
     @Transactional
     public BalanceDto manageBalance(BalanceDto balanceDto) throws UserException {
-
-//        userService.checkAdminRights(userId);
-
         Optional<Balance> previousBalanceInDB = balanceRepository.findTopByOrderByIdDesc();
         if (!previousBalanceInDB.isPresent()) {
             balanceValidators.validateFirstRecord(balanceDto);

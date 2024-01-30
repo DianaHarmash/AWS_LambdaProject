@@ -2,6 +2,7 @@ package com.example.diplomaspringproject1_0.mappers;
 
 import com.example.diplomaspringproject1_0.dto.StudentCabinetDto;
 import com.example.diplomaspringproject1_0.dto.SystemUserDto;
+import com.example.diplomaspringproject1_0.dto.SystemUserDtoForDisplay;
 import com.example.diplomaspringproject1_0.entity.Speciality;
 import com.example.diplomaspringproject1_0.entity.StudentCabinet;
 import com.example.diplomaspringproject1_0.entity.SystemUser;
@@ -15,7 +16,7 @@ import static com.example.diplomaspringproject1_0.mappers.SpecialityMapping.tran
 @Mapper(componentModel = "spring")
 public interface StudentCabinetMapping {
 
-    default StudentCabinetDto studentCabinetToStudentCabinetDto(StudentCabinet studentCabinet, SystemUserDto systemUserDto) {
+    default StudentCabinetDto studentCabinetToStudentCabinetDto(StudentCabinet studentCabinet, SystemUserDtoForDisplay systemUserDto) {
         StudentCabinetDto studentCabinetDto = StudentCabinetDto.builder()
                                                                .id(studentCabinet.getId())
                                                                .year(studentCabinet.getYear())
@@ -29,11 +30,11 @@ public interface StudentCabinetMapping {
         return studentCabinetDto;
     }
     default StudentCabinetDto studentCabinetToStudentCabinetDto(StudentCabinet studentCabinet) {
-        SystemUserDto systemUserDto = SystemUserDto.builder()
+        SystemUserDtoForDisplay systemUserDto = SystemUserDtoForDisplay.builder()
             .id(studentCabinet.getUser().getId())
             .surname(studentCabinet.getUser().getSurname())
             .name(studentCabinet.getUser().getName())
-            .rights(studentCabinet.getUser().getRights().name())
+            .email(studentCabinet.getUser().getEmail())
             .build();
 
         StudentCabinetDto studentCabinetDto = StudentCabinetDto.builder()

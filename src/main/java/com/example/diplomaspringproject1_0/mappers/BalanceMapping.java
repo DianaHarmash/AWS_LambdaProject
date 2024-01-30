@@ -19,7 +19,11 @@ public interface BalanceMapping {
             balance.setId(source.getId());
         }
 
-        balance.setSum(source.getCodeOfOperation().getPayment());
+        if (source.getCodeOfOperation().equals(CodeOfOperation.INCOME_FROM_STUDENTS)) {
+            balance.setSum(source.getSum());
+        } else {
+            balance.setSum(source.getCodeOfOperation().getPayment());
+        }
         balance.setCodeOfOperation(source.getCodeOfOperation());
         balance.setDate(Date.valueOf(LocalDate.now()));
 
@@ -33,9 +37,8 @@ public interface BalanceMapping {
                 balance.setSum(source.getSum());
             }
             else {
-                balance.setBalance(source.getCodeOfOperation().getPayment());
+                balance.setBalance(source.getSum());
             }
-
         }
 
         return balance;

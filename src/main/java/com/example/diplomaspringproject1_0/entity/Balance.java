@@ -20,7 +20,6 @@ public class Balance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private BigDecimal sum;
 
     @Column(nullable = false)
@@ -30,6 +29,5 @@ public class Balance {
     @Enumerated(EnumType.STRING)
     private CodeOfOperation codeOfOperation;
 
-    @Column(nullable = false)
     private BigDecimal balance;
 }

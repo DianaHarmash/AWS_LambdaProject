@@ -4,6 +4,7 @@ import com.example.diplomaspringproject1_0.dto.BalanceDto;
 import com.example.diplomaspringproject1_0.dto.SpecialityDto;
 import com.example.diplomaspringproject1_0.dto.StudentCabinetDto;
 import com.example.diplomaspringproject1_0.dto.SystemUserDto;
+import com.example.diplomaspringproject1_0.dto.SystemUserDtoForDisplay;
 import com.example.diplomaspringproject1_0.entity.Speciality;
 import com.example.diplomaspringproject1_0.entity.StudentCabinet;
 import com.example.diplomaspringproject1_0.entity.SystemUser;
@@ -76,7 +77,7 @@ public class StudentCabinetService {
 
         log.debug("Filled student cabinet with id = {}", studentCabinetFromDb.getId());
 
-        SystemUserDto systemUserDto = systemUserMapping.systemUserToSystemUserDto(studentCabinetFromDb.getUser());
+        SystemUserDtoForDisplay systemUserDto = systemUserMapping.systemUserToSystemUserDtoForDisplay(studentCabinetFromDb.getUser());
         StudentCabinetDto updatedStudentCabinet = studentCabinetMapping.studentCabinetToStudentCabinetDto(studentCabinetFromDb, systemUserDto);
         return updatedStudentCabinet;
     }
@@ -85,22 +86,22 @@ public class StudentCabinetService {
 
         StudentCabinet preBuildStudentCabinet = preBuildStudentCabinet(systemUser);
         StudentCabinet studentCabinet = studentCabinetRepository.save(preBuildStudentCabinet);
-        SystemUserDto systemUserDto = systemUserMapping.systemUserToSystemUserDto(systemUser);
+        SystemUserDtoForDisplay systemUserDto = systemUserMapping.systemUserToSystemUserDtoForDisplay(systemUser);
         StudentCabinetDto studentCabinetDto = studentCabinetMapping.studentCabinetToStudentCabinetDto(studentCabinet, systemUserDto);
 
         return studentCabinetDto;
     }
     @Transactional
-    public ResponseEntity<String> transitPayToTheBalance(String surname, String name) {
-        log.debug("Starting transferring payment from {}, {}", surname, name);
+    public ResponseEntity<String> transitPayToTheBalance(String email) {
+        log.debug("Starting transferring payment from {}}", email);
 
-        StudentCabinet studentCabinetFromDb = studentCabinetRepository.findBySurnameAndName(surname, name)
+        StudentCabinet studentCabinetFromDb = studentCabinetRepository.findByEmail(email)
                                                                       .orElseThrow();
 
         BalanceDto balanceDto = buildPaymentFromStudent(studentCabinetFromDb.getDebtBalance());
         try {
-            BalanceDto transferredFunds = balanceService.manageBalance(balanceDto);
-            log.debug("Transferring completed for student = {}, {}", surname, name);
+            balanceService.manageBalance(balanceDto);
+            log.debug("Transferring completed for student = {}", email);
         } catch (UserException e) {
             return new ResponseEntity<>(PAYMENT_IS_FAILED,
                                         HttpStatus.BAD_REQUEST);
@@ -109,16 +110,9 @@ public class StudentCabinetService {
         return new ResponseEntity<>(PAYMENT_IS_SUCCESSFUL,
                                     HttpStatus.OK);
     }
-    public Optional<StudentCabinetDto> getStudentCabinet(Long id, String surname, String name) {
-        Optional<StudentCabinet> studentCabinet = Optional.empty();
-
-        if (id != null) {
-            log.debug("Getting student cabinet by id, and id = {}", id);
-            studentCabinet = studentCabinetRepository.findById(id);
-        } else if (surname != null && name != null) {
-            log.debug("Getting student cabinet by surname = {}, name = {}", surname, name);
-            studentCabinet = studentCabinetRepository.findBySurnameAndName(surname, name);
-        }
+    public Optional<StudentCabinetDto> getStudentCabinet(String email) {
+        log.debug("Getting student cabinet by emal, and email = {}", email);
+        Optional<StudentCabinet> studentCabinet = studentCabinetRepository.findByEmail(email);
 
         if (studentCabinet.isEmpty()) {
             return Optional.empty();

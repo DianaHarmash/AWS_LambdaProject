@@ -24,20 +24,17 @@ public class StudentCabinetController {
         return new ResponseEntity<>(studentCabinetService.updateStudentCabinet(systemUserDto),
                                     HttpStatus.CREATED);
     }
-    @GetMapping()
+    @GetMapping("/display")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<StudentCabinetDto> getStudentCabinet(@RequestParam(required = false) Long id,
-                                                               @RequestParam(required = false) String surname,
-                                                               @RequestParam(required = false) String name) {
-        Optional<StudentCabinetDto> studentCabinetDto = studentCabinetService.getStudentCabinet(id, surname, name);
+    public ResponseEntity<StudentCabinetDto> getStudentCabinet(@RequestParam(required = false) String email) {
+        Optional<StudentCabinetDto> studentCabinetDto = studentCabinetService.getStudentCabinet(email);
         return new ResponseEntity<>(studentCabinetDto.orElseThrow(), HttpStatus.FOUND);
     }
 
     @GetMapping ("/balance")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<String> transitPayToTheBalance(@RequestParam String surname,
-                                                         @RequestParam String name) {
-        return studentCabinetService.transitPayToTheBalance(surname, name);
+    public ResponseEntity<String> transitPayToTheBalance(@RequestParam String email) {
+        return studentCabinetService.transitPayToTheBalance(email);
     }
 
 }

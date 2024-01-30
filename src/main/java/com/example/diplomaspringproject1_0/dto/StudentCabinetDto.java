@@ -9,7 +9,7 @@ public class StudentCabinetDto {
 
     private Long id;
 
-    private SystemUserDto systemUserDto;
+    private SystemUserDtoForDisplay systemUserDto;
 
     private String speciality;
 

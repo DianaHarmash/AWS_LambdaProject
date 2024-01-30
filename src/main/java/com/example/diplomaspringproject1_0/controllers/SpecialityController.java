@@ -27,7 +27,7 @@ public class SpecialityController {
         return new ResponseEntity<>(specialityService.createSpeciality(specialityDto),
                                     HttpStatus.CREATED);
     }
-    @GetMapping("/{speciality}")
+    @GetMapping("/display/{speciality}")
     @ResponseStatus(value = HttpStatus.FOUND)
     public ResponseEntity<SpecialityDto> getSpecialityBuSpecialityName(@PathVariable String speciality) {
         Optional<SpecialityDto> specialityDto = specialityService.getSpecialityBySpecialityName(speciality);
