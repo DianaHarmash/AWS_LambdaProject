@@ -5,6 +5,7 @@ import com.example.diplomaspringproject1_0.dto.SystemUserDto;
 import com.example.diplomaspringproject1_0.entity.SystemUser;
 import com.example.diplomaspringproject1_0.entity.enums.Entities;
 import com.example.diplomaspringproject1_0.entity.enums.Rights;
+import com.example.diplomaspringproject1_0.exceptions.ApiError;
 import com.example.diplomaspringproject1_0.exceptions.UserException;
 import com.example.diplomaspringproject1_0.facades.Validators;
 import com.example.diplomaspringproject1_0.mappers.SystemUserMapping;
@@ -13,6 +14,7 @@ import com.example.diplomaspringproject1_0.security.UserPrincipal;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -46,16 +48,22 @@ public class UserService implements UserDetailsService {
     @Transactional
     public SystemUserDto createUser(SystemUserDto request) throws UserException {
         validators.getValidators(Entities.USER).validate(request);
-
         log.debug("Starting creating new user with rights: {}", request.getRights());
 
         String encrypted = getPasswordEncoder().encode(request.getPassword());
-
         SystemUser userToSave = systemUserMapping.systemUserDtoToSystemUser(request);
-
         userToSave.setPassword(encrypted);
 
+        if (systemUserRepository.findSystemUserByRights(userToSave.getRights()).isPresent()) {
+            throw new UserException(ApiError.builder()
+                .message("Admin is already present in DB.")
+                .userMessage("Додаток не передбачає наявність двох адмінів.")
+                .statusCode(HttpStatus.CONFLICT)
+                .build());
+        }
+
         SystemUser user = systemUserRepository.save(userToSave);
+
         if (user.getRights().equals(Rights.ROLE_USER)) {
             StudentCabinetDto studentCabinetDto = studentCabinetService.preCreateStudentCabinetForUser(user);
             log.debug("Created new student cabinet with id = {} for user id = {}", studentCabinetDto.getId(), studentCabinetDto.getSystemUserDto().getId());
