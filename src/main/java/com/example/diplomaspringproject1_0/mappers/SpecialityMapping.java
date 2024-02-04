@@ -22,6 +22,7 @@ public interface SpecialityMapping {
         SpecialityDto specialityDto = new SpecialityDto(source.getId(),
                                                         source.getSpeciality(),
                                                         source.getPrice(),
+                                                        source.getQuantityOfOccupiedPlaces(),
                                                         source.getQuantityOfPlaces());
 
         Speciality speciality = new Speciality();
@@ -29,6 +30,7 @@ public interface SpecialityMapping {
         speciality.setSpeciality(transformSpecialityNameToEnum(specialityDto.getSpeciality()));
         speciality.setPrice(specialityDto.getPrice());
         speciality.setQuantityOfPlaces(specialityDto.getQuantityOfPlaces());
+        speciality.setQuantityOfOccupiedPlaces(specialityDto.getQuantityOfOccupiedPlaces());
         speciality.setQuantityOfBillablePlaces(specialityDto.getQuantityOfBillablePlaces());
 
         return speciality;

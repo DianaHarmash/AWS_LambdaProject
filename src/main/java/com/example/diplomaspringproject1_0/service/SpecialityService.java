@@ -105,7 +105,31 @@ public class SpecialityService {
                                             .statusCode(HttpStatus.BAD_REQUEST)
                                             .build());
         } catch (RuntimeException ex) { }
+
         log.debug("Deleted speciality = {}", name);
+    }
+    public void addStudentToSpeciality(SpecialityDto specialityDto) throws UserException {
+        log.debug("Adding one student to speciality = {}", specialityDto.getSpeciality());
+
+        SpecialityName specialityName = transformSpecialityNameToEnum(specialityDto.getSpeciality());
+
+        Speciality speciality = specialtyRepository.findBySpeciality(specialityName).orElseThrow();
+
+        int quantityOfPaidStudentsPlaces = speciality.getQuantityOfPlaces() - speciality.getQuantityOfBillablePlaces();
+
+        if (quantityOfPaidStudentsPlaces > speciality.getQuantityOfOccupiedPlaces() + 1) {
+
+            speciality.setQuantityOfOccupiedPlaces(speciality.getQuantityOfOccupiedPlaces() + 1);
+            specialtyRepository.save(speciality);
+        } else {
+            throw new UserException(ApiError.builder()
+                    .message("Speciality is full with students.")
+                    .userMessage("Місця на дану спеціальність закінчились. Будь ласка, спробуйте інші")
+                    .statusCode(HttpStatus.BAD_REQUEST)
+                    .build());
+        }
+
+        log.debug("Added the student to speciality = {}", specialityDto.getSpeciality());
     }
 
     private boolean isChanged(SpecialityDto specialityDtoFromDb, SpecialityDto specialityDto) {

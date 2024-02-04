@@ -34,4 +34,8 @@ public class Speciality {
     @Column(name = "quantity_of_billable_places",
             nullable = false)
     private Integer quantityOfBillablePlaces;
+
+    @Column(name = "quantity_of_occupied_places",
+            columnDefinition = "INT DEFAULT 0")
+    private Integer quantityOfOccupiedPlaces;
 }

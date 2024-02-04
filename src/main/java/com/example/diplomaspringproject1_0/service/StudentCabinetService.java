@@ -71,11 +71,17 @@ public class StudentCabinetService {
         StudentCabinet studentCabinetFromDb = studentCabinetRepository.findByUserId(studentCabinetDto.getSystemUserDto().getId())
                                                                       .orElseThrow();
 
-        SpecialityDto specialityDto = specialityService.getSpecialityBySpecialityName(studentCabinetDto.getSpeciality())
-                                                       .orElseThrow();
-        Speciality speciality = specialityMapping.specialityDtoToSpeciality(specialityDto);
-        studentCabinetFromDb = buildStudentCabinet(studentCabinetFromDb, studentCabinetDto, speciality);
-        studentCabinetRepository.save(studentCabinetFromDb);
+        try {
+            SpecialityDto specialityDto = specialityService.getSpecialityBySpecialityName(studentCabinetDto.getSpeciality())
+                    .orElseThrow();
+            Speciality speciality = specialityMapping.specialityDtoToSpeciality(specialityDto);
+            studentCabinetFromDb = buildStudentCabinet(studentCabinetFromDb, studentCabinetDto, speciality);
+            studentCabinetRepository.save(studentCabinetFromDb);
+            specialityService.addStudentToSpeciality(specialityDto);
+        } catch (UserException ex) {
+            log.debug("Student Cabinet failed with ex: \'{}\'", ex.getMessage());
+            throw ex;
+        }
 
         log.debug("Filled student cabinet with id = {}", studentCabinetFromDb.getId());
 
