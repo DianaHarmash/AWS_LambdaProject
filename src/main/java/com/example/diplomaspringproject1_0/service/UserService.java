@@ -50,6 +50,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public SystemUserDtoForDisplay createUser(SystemUserDto request) throws UserException {
         validators.getValidators(Entities.USER).validate(request);
+
         log.debug("Starting creating new user with rights: {}", request.getRights());
 
         String encrypted = getPasswordEncoder().encode(request.getPassword());

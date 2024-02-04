@@ -9,11 +9,14 @@ import com.example.diplomaspringproject1_0.entity.Speciality;
 import com.example.diplomaspringproject1_0.entity.StudentCabinet;
 import com.example.diplomaspringproject1_0.entity.SystemUser;
 import com.example.diplomaspringproject1_0.entity.enums.CodeOfOperation;
+import com.example.diplomaspringproject1_0.entity.enums.Entities;
 import com.example.diplomaspringproject1_0.exceptions.UserException;
+import com.example.diplomaspringproject1_0.facades.Validators;
 import com.example.diplomaspringproject1_0.mappers.SpecialityMapping;
 import com.example.diplomaspringproject1_0.mappers.StudentCabinetMapping;
 import com.example.diplomaspringproject1_0.mappers.SystemUserMapping;
 import com.example.diplomaspringproject1_0.repositories.StudentCabinetRepository;
+import com.example.diplomaspringproject1_0.validators.SpecialityValidators;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -40,31 +43,30 @@ public class StudentCabinetService {
     private final SystemUserMapping systemUserMapping;
     private final SpecialityMapping specialityMapping;
     private final StudentCabinetMapping studentCabinetMapping;
+    private final Validators validators;
     private final BalanceService balanceService;
-//    private final UserService userService;
     @Autowired
     public StudentCabinetService(StudentCabinetRepository studentCabinetRepository,
                                  SpecialityService specialityService,
                                  SystemUserMapping systemUserMapping,
                                  SpecialityMapping specialityMapping,
                                  StudentCabinetMapping studentCabinetMapping,
-                                 BalanceService balanceService
-                                 /*UserService userService*/) {
+                                 BalanceService balanceService,
+                                 Validators validators) {
         this.studentCabinetRepository = studentCabinetRepository;
         this.specialityService = specialityService;
         this.systemUserMapping = systemUserMapping;
         this.specialityMapping = specialityMapping;
         this.studentCabinetMapping = studentCabinetMapping;
         this.balanceService = balanceService;
-//        this.userService = userService;
+        this.validators = validators;
     }
 
     @Transactional
-    public StudentCabinetDto updateStudentCabinet(StudentCabinetDto studentCabinetDto) {
-
-//        userService.checkAdminRights(adminId);
-
+    public StudentCabinetDto updateStudentCabinet(StudentCabinetDto studentCabinetDto) throws UserException {
         log.debug("Starting filling student cabinet for student id = {}", studentCabinetDto.getSystemUserDto().getId());
+
+        validators.getValidators(Entities.STUDENT_CABINET).validate(studentCabinetDto);
 
         StudentCabinet studentCabinetFromDb = studentCabinetRepository.findByUserId(studentCabinetDto.getSystemUserDto().getId())
                                                                       .orElseThrow();

@@ -13,8 +13,6 @@ import java.math.BigDecimal;
 @Component
 public class BalanceValidators implements Validator<BalanceDto> {
 
-    // TODO: use facades
-
     @Override
     public void validate(BalanceDto balanceDto) throws UserException {
         CodeOfOperation balanceCodeOfOperation = balanceDto.getCodeOfOperation();

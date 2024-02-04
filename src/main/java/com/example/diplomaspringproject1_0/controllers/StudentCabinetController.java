@@ -2,6 +2,7 @@ package com.example.diplomaspringproject1_0.controllers;
 
 import com.example.diplomaspringproject1_0.dto.StudentCabinetDto;
 import com.example.diplomaspringproject1_0.dto.SystemUserDto;
+import com.example.diplomaspringproject1_0.exceptions.UserException;
 import com.example.diplomaspringproject1_0.service.StudentCabinetService;
 import java.util.Optional;
 
@@ -19,7 +20,7 @@ public class StudentCabinetController {
     private final StudentCabinetService studentCabinetService;
 
     @PutMapping("/update")
-    public ResponseEntity<StudentCabinetDto> updateStudentCabinetForUser(@RequestBody StudentCabinetDto systemUserDto) {
+    public ResponseEntity<StudentCabinetDto> updateStudentCabinetForUser(@RequestBody StudentCabinetDto systemUserDto) throws UserException {
         return new ResponseEntity<>(studentCabinetService.updateStudentCabinet(systemUserDto),
                                     HttpStatus.CREATED);
     }

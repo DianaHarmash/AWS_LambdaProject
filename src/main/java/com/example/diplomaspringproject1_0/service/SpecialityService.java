@@ -2,9 +2,11 @@ package com.example.diplomaspringproject1_0.service;
 
 import com.example.diplomaspringproject1_0.dto.SpecialityDto;
 import com.example.diplomaspringproject1_0.entity.Speciality;
+import com.example.diplomaspringproject1_0.entity.enums.Entities;
 import com.example.diplomaspringproject1_0.entity.enums.SpecialityName;
 import com.example.diplomaspringproject1_0.exceptions.ApiError;
 import com.example.diplomaspringproject1_0.exceptions.UserException;
+import com.example.diplomaspringproject1_0.facades.Validators;
 import com.example.diplomaspringproject1_0.mappers.SpecialityMapping;
 import com.example.diplomaspringproject1_0.repositories.SpecialtyRepository;
 import com.example.diplomaspringproject1_0.repositories.StudentCabinetRepository;
@@ -26,29 +28,23 @@ public class SpecialityService {
     private final SpecialityMapping specialityMapping;
     private final SpecialtyRepository specialtyRepository;
     private final StudentCabinetRepository studentCabinetRepository;
-//    private final UserService userService;
-    private final SpecialityValidators specialityValidators;
+    private final Validators validators;
     @Autowired
     public SpecialityService(SpecialityMapping specialityMapping,
                              SpecialtyRepository specialtyRepository,
                              StudentCabinetRepository studentCabinetRepository,
-                             /*UserService userService,*/
-                             SpecialityValidators specialityValidators) {
+                             Validators validators) {
         this.specialityMapping = specialityMapping;
         this.specialtyRepository = specialtyRepository;
         this.studentCabinetRepository = studentCabinetRepository;
-//        this.userService = userService;
-        this.specialityValidators = specialityValidators;
+        this.validators = validators;
     }
 
     @Transactional
     public SpecialityDto createSpeciality(SpecialityDto specialityDto) throws UserException    {
-
-//        userService.checkAdminRights(adminId);
-
         log.debug("Starting creating speciality = {}", specialityDto.getSpeciality());
 
-        specialityValidators.validate(specialityDto);
+        validators.getValidators(Entities.SPECIALITY).validate(specialityDto);
 
         Speciality specialityToSave = specialityMapping.specialityDtoToSpeciality(specialityDto);
         Speciality speciality = specialtyRepository.save(specialityToSave);
@@ -68,16 +64,12 @@ public class SpecialityService {
             return Optional.empty();
         }
 
-
         log.debug("Retrieving speciality with id = {}", speciality.get().getId());
         SpecialityDto specialityDto = specialityMapping.specialityToSpecialityDto(speciality.get());
         return Optional.of(specialityDto);
     }
     @Transactional
     public SpecialityDto updateSpeciality(String speciality, SpecialityDto specialityDto) {
-
-//        userService.checkAdminRights(adminId);
-
         log.debug("Starting updating speciality = {}", speciality);
 
         SpecialityDto specialityDtoFromDb = getSpecialityBySpecialityName(speciality).orElseThrow();
@@ -96,11 +88,10 @@ public class SpecialityService {
         return specialityDtoFromDb;
     }
     public void deleteSpeciality(String name) throws UserException {
-
-//        userService.checkAdminRights(adminId);
-
         log.debug("Starting deleting speciality = {}", name);
+
         SpecialityName specialityName = transformSpecialityNameToEnum(name);
+
         Speciality speciality = specialtyRepository.findBySpeciality(specialityName).orElseThrow();
         try {
             studentCabinetRepository.removeSpecialityInformationWhenRemovingSpeciality(speciality.getId());
