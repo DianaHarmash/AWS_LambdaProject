@@ -8,6 +8,9 @@ import com.example.diplomaspringproject1_0.facades.Validators;
 import com.example.diplomaspringproject1_0.mappers.BalanceMapping;
 import com.example.diplomaspringproject1_0.repositories.BalanceRepository;
 import jakarta.transaction.Transactional;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +46,14 @@ public class BalanceService {
         BalanceDto savedBalanceDto = balanceMapping.balanceToBalanceDto(savedBalance);
 
         return savedBalanceDto;
+    }
+
+    public List<BalanceDto> getBalance() {
+        List<Balance> balance = (List<Balance>) balanceRepository.findAll();
+        List<BalanceDto> balanceDto = balance.stream()
+                                             .map(balanceMapping::balanceToBalanceDto)
+                                             .toList();
+
+        return balanceDto;
     }
 }

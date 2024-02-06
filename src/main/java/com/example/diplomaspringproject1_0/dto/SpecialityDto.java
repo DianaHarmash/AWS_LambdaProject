@@ -27,8 +27,8 @@ public class SpecialityDto {
     public SpecialityDto(Long id,
                          String speciality,
                          BigDecimal price,
-                         Integer quantityOfPlaces,
-                         Integer quantityOfOccupiedPlaces) {
+                         Integer quantityOfOccupiedPlaces,
+                         Integer quantityOfPlaces) {
         this.id = id;
         this.speciality = speciality;
         this.price = price;

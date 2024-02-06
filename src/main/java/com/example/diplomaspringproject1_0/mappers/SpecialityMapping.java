@@ -30,7 +30,8 @@ public interface SpecialityMapping {
         speciality.setSpeciality(transformSpecialityNameToEnum(specialityDto.getSpeciality()));
         speciality.setPrice(specialityDto.getPrice());
         speciality.setQuantityOfPlaces(specialityDto.getQuantityOfPlaces());
-        speciality.setQuantityOfOccupiedPlaces(specialityDto.getQuantityOfOccupiedPlaces());
+        speciality.setQuantityOfOccupiedPlaces(
+            specialityDto.getQuantityOfOccupiedPlaces() == null ? 0 : specialityDto.getQuantityOfOccupiedPlaces());
         speciality.setQuantityOfBillablePlaces(specialityDto.getQuantityOfBillablePlaces());
 
         return speciality;
@@ -43,6 +44,7 @@ public interface SpecialityMapping {
                                                    .quantityOfPlaces(source.getQuantityOfPlaces())
                                                    .price(source.getPrice())
                                                    .quantityOfBillablePlaces(source.getQuantityOfBillablePlaces())
+                                                   .quantityOfOccupiedPlaces(source.getQuantityOfOccupiedPlaces())
                                                    .build();
 
         return specialityDto;
