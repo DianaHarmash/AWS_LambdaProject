@@ -1,0 +1,22 @@
+package com.example.diplomaspringproject.entity.enums;
+
+public enum SpecialityName {
+    MANAGEMENT("Менеджмент"),
+    COMPUTER_SCIENCE("Комп\'ютерні науки"),
+    ECOLOGY("Екологія"),
+    MATHEMATICS("Математика"),
+    COMPUTER_ENGINEERING("Комп\'ютерна інжинерія"),
+    SYSTEM_ANALYSIS("Системна аналітика"),
+    HEAT_ENERGY("Теплова енергетика"),
+    TEST_NAME("Test");
+
+    private final String specialityName;
+
+    SpecialityName(String specialityName) {
+        this.specialityName = specialityName;
+    }
+
+    public String getSpecialityName() {
+        return specialityName;
+    }
+}
