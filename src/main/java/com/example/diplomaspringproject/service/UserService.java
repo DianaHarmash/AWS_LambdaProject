@@ -57,7 +57,7 @@ public class UserService implements UserDetailsService {
         SystemUser userToSave = systemUserMapping.systemUserDtoToSystemUser(request);
         userToSave.setPassword(encrypted);
 
-        if (systemUserRepository.findSystemUserByRights(userToSave.getRights()).isPresent() &&
+        if (systemUserRepository.findSystemUserByRights(Rights.ROLE_ADMIN).isPresent() &&
             Rights.ROLE_ADMIN.equals(userToSave.getRights())) {
             throw new UserException(ApiError.builder()
                 .message("Admin is already present in DB.")
