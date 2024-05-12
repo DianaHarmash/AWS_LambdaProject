@@ -26,7 +26,7 @@ public class AuthController {
 
     @GetMapping("/secure")
     public String secure(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-        return "If you see it, you're logged in  as user " + userPrincipal.getEmail() + ".\n" +
+        return "If you see it, you're logged in  as user = {" + userPrincipal.getEmail() + "}.\n" +
                 "User ID: " + userPrincipal.getUserId() +  ".\n" +
                 "User role: " + Arrays.toString(List.of(userPrincipal.getAuthorities()).toArray()) + ".\n";
     }
